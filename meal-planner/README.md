@@ -1,42 +1,60 @@
 # Haftalık Marketim
 
-Safari'den kullanılmak üzere hazırlanmış statik haftalık alışveriş ve tarif sitesi.
+Safari ile kullanılabilen yedi günlük kişisel öğün ve alışveriş planlayıcısı.
 
-## Bağlantı ve yayın
-
-GitHub Pages yayın kaynağı bu repoda `main` ve `/(root)` olmalı. Bu ayar açıksa sayfa:
+## Site
 
 https://coder-berkayc.github.io/linuxdrive-oauth-pages/meal-planner/
 
-Henüz aktif değilse repo `Settings > Pages > Build and deployment > Deploy from a branch > main > /(root) > Save` menüsünden bir kez etkinleştirilir.
+GitHub Pages yayın kaynağı `main` ve `/(root)`. Bu alt klasör mevcut LinuxDrive OAuth ana sayfasından ayrıdır.
 
-Bu alt klasör, repodaki mevcut OAuth ana sayfası ve gizlilik metninden ayrı tutulur.
+## Mevcut sürüm (2.0)
+
+* Pazartesi ile Pazar arasında 7 günlük plan.
+* Öğün sayısı her gün ayrı ayarlanabilir. Tüm haftaya aynı öğün sayısı veya seçili günün tarifleri uygulanabilir.
+* Her öğün için bir tarif ve porsiyon sayısı seçilir.
+* Malzemeler otomatik toplanır, Türkiye'deki yaygın paket boyutlarına yuvarlanır.
+* Günlük kalori, protein, karbonhidrat ve yağ yaklaşık hesaplanır.
+* Haftalık alışveriş, stok işaretleri, alınan ürünler ve paket fiyatı takibi yapılır.
+* Protein hedefi referans kg × gram/kg veya manuel değerle kişiselleştirilebilir.
+* Tarif kitaplığında 6 tarif ve hazırlama notları bulunur.
+* FreeLLMAPI için güvenli entegrasyon planı vardır; canlı model bağlantısı henüz yoktur.
+
+## Ana dosyalar
+
+* `index.html`: Uygulamanın ana ekranı.
+* `styles.v2.css`: Mobil Safari arayüzü.
+* `engine.v2.js`: Saf alışveriş ve besin hesaplama fonksiyonları.
+* `app.v2.js`: Kullanıcı arayüzü, tarayıcı verileri ve haftalık plan.
+* `catalog.v2.json`: Malzemeler, paket boyutları, yaklaşık makrolar ve tarifler.
+* `DEVELOPMENT_PLAN.md`: Uygulama kararları, aşamalar, güvenlik, AI mimarisi ve testler.
+* `tests/engine.test.cjs`: Hesaplama regresyon testleri.
+* `plan.json`: Eski sabit liste sürüm 1 verisi, yeni hesaplama motoru bunu kullanmaz.
 
 ## Kullanım
 
-* Pazartesi yeni hafta otomatik oluşur. Sonraki veya önceki haftaya bakılabilir.
-* Aldım işaretleri haftaya özeldir. `Evde var` işaretleri sonraki haftalarda da kalır.
-* Ürünlerin yanında yazan paket miktarları Türkiye marketlerine uygundur. Haftalık tüketim ayrı görünür.
-* Ürünlerin fiyatına dokunarak paket fiyatı girilebilir. Sadece fiyatı bilinen kalemlerin toplamı hesaplanır, eksik kalem sayısı gösterilir.
-* `Alınacak listeyi kopyala` düğmesi sadece alınması gereken ürünleri panoya alır.
-* Safari'den Paylaş menüsü ile Ana Ekrana Ekle kullanılabilir.
+1. Siteyi iPhone Safari'de açıp Paylaş menüsünden Ana Ekrana Ekle.
+2. `7 Gün` sekmesinden bir gün seçip öğün ekle, sil veya tarif değiştir.
+3. Porsiyon sayısını ayarla. `Alışveriş` sekmesi otomatik yeniden hesaplanır.
+4. `Evde var` işaretleri sonraki haftalara taşınır; `Alındı` tikleri sadece ilgili haftaya aittir.
+5. Ürünün paket fiyatını TL olarak gir. Açık reyonda fiyat, arayüzdeki 100 g birimine göre girilir.
+6. `Hedefler` sekmesinden isteğe bağlı kalori ve protein hedefini belirle.
+7. İstersen haftalık plan özetini kullanıcı işlemiyle kopyalayarak AI danışmanlığına sun.
 
-## Listeyi ChatGPT ile güncelleme
+Yeni hafta başladığında alındı işaretleri temizdir. Son kullandığın öğün düzeni yeni haftaya başlangıç şablonu olarak aktarılır.
 
-Kaynak dosya: `meal-planner/plan.json`
+## Veri saklama
 
-Kullanıcı yeni tarif, malzeme, porsiyon veya paket değişikliği istediğinde aynı JSON dosyası güncellenir. Mevcut `id` değerlerini değiştirmemek önemli: Safari'deki önceki stok ve fiyat seçimleri o değerlerle eşleştiriliyor.
+Hedefler, öğün seçimleri, stok ve fiyatlar yalnızca Safari'nin `localStorage` alanında tutulur. Repoya veya sunucuya gönderilmez ve cihazlar arasında senkronize olmaz. Tarayıcı verilerini silmek kayıtları da kaldırır. Sürüm 1 stok ve fiyatları ilk açılışta otomatik taşınır.
 
-Normal haftalarda dosyayı değiştirmek gerekmez. Tarih hesabı iPhone'un saatinden değil, `Europe/Istanbul` zaman diliminden yapılır. Site her açıldığında güncel JSON'u yükler; son erişilen plan ağ kesilirse cihazda önbellekten bulunabilir.
+Repo public olduğundan tarifler, malzemeler ve kod herkese açıktır. Kişisel kilo, fotoğraf, tahlil, token ve kimlik bilgisi repoya yüklenmemelidir.
 
-## Gizlilik
+## Beslenme verisi uyarısı
 
-Repo ve temel tarif/alım listesi herkese açıktır. Kişiye özel sağlık ve ağırlık bilgileri repoya eklenmemiştir. Safari'deki işaretler, stok ve kaydedilen fiyatlar tarayıcı `localStorage` alanındadır; GitHub'a, başka cihaza veya hesaba senkronize edilmez. Tarayıcı verileri silinirse kayıtlar kaybolabilir.
+Genel makrolar tahmindir; marka etiketleri ve gramajlar doğrulanmalıdır. Protein hedefi hesaplayıcısı sağlık önerisi yerine geçmez. Okulda tavuklu, pirinçli ve sütlü yiyecekler güvenli şekilde soğuk taşınmalıdır.
 
-## Saklama güvenliği
+## Yayın ve doğrulama
 
-Tavuk ve pirinçli dürümlerin okulda gün boyunca güvenli soğuklukta saklanması gerekir. Buzdolabı olmadığında 4°C altında tutulduğu doğrulanamayan akşam dürümü güvenli kabul edilmez. Mikrodalgada ısıtma önceki güvensiz saklama koşullarını düzeltmez.
+GitHub dosyaları güncellendiğinde Pages yeni sürümü yayınlar. Safari önbelleği bazı güncellemeleri geciktirebilir. İleri seviye teknik değerlendirme ve gelecekteki FreeLLMAPI bağlantısı için `DEVELOPMENT_PLAN.md` dosyasına bak.
 
-## Sürüm
-
-İlk sürüm: 21 Kasım 2026. Kaynak: 15 Kasım 2026 tarihli `Haftalik_Okul_Beslenme_ve_Alisveris_Plani.md` sürüm 1.2. Fiyatlar otomatik piyasa verisi değildir.
+Otomatik testler: `node --test meal-planner/tests/engine.test.cjs`. Testler sunucusuz hesaplama motorunu kapsar; iPhone Safari üzerinde gerçek cihaz doğrulaması ayrıca yapılmalıdır.
