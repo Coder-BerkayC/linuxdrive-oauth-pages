@@ -1,0 +1,652 @@
+{
+  "version": 2,
+  "updated": "2026-11-21",
+  "note": "Yaklaşık besin değerleri. Ambalaj etiketi ve kullanılan miktarlar ölçülerek doğrulanmalıdır. Tavuk çiğ, pirinç kuru, süt ml olarak ölçülür.",
+  "ingredients": [
+    {
+      "id": "chicken",
+      "name": "Tavuk göğsü (çiğ)",
+      "unit": "g",
+      "packageSize": 1000,
+      "packageLabel": "1 kg paket",
+      "group": "protein",
+      "macros": [
+        110,
+        23.1,
+        0,
+        1.3
+      ]
+    },
+    {
+      "id": "tortilla",
+      "name": "Büyük tortilla (yaklaşık 70 g)",
+      "unit": "adet",
+      "packageSize": 6,
+      "packageLabel": "6'lı paket",
+      "group": "bakliyat",
+      "macros": [
+        218,
+        6,
+        36,
+        5.5
+      ]
+    },
+    {
+      "id": "rice",
+      "name": "Pilavlık pirinç (çiğ)",
+      "unit": "g",
+      "packageSize": 1000,
+      "packageLabel": "1 kg paket",
+      "group": "bakliyat",
+      "macros": [
+        365,
+        7.1,
+        80,
+        0.7
+      ]
+    },
+    {
+      "id": "cheese",
+      "name": "Kaşar peyniri",
+      "unit": "g",
+      "packageSize": 250,
+      "packageLabel": "250 g paket",
+      "group": "sut",
+      "macros": [
+        350,
+        25,
+        2,
+        27
+      ]
+    },
+    {
+      "id": "onion",
+      "name": "Kuru soğan",
+      "unit": "g",
+      "packageSize": 100,
+      "packageLabel": "açık reyon, 100 g adım",
+      "loose": true,
+      "group": "sebze",
+      "macros": [
+        40,
+        1.1,
+        9.3,
+        0.1
+      ]
+    },
+    {
+      "id": "pepper",
+      "name": "Kapya veya yeşil biber",
+      "unit": "g",
+      "packageSize": 100,
+      "packageLabel": "açık reyon, 100 g adım",
+      "loose": true,
+      "group": "sebze",
+      "macros": [
+        28,
+        1,
+        6,
+        0.3
+      ]
+    },
+    {
+      "id": "greens",
+      "name": "Marul veya roka",
+      "unit": "g",
+      "packageSize": 100,
+      "packageLabel": "100 g paket",
+      "group": "sebze",
+      "macros": [
+        20,
+        1.5,
+        3,
+        0.3
+      ]
+    },
+    {
+      "id": "yogurt",
+      "name": "Süzme yoğurt",
+      "unit": "g",
+      "packageSize": 500,
+      "packageLabel": "500 g kase",
+      "group": "sut",
+      "macros": [
+        120,
+        7,
+        4,
+        8
+      ]
+    },
+    {
+      "id": "garlic",
+      "name": "Sarımsak",
+      "unit": "g",
+      "packageSize": 50,
+      "packageLabel": "1 baş, yaklaşık 50 g",
+      "group": "sebze",
+      "macros": [
+        149,
+        6.4,
+        33,
+        0.5
+      ]
+    },
+    {
+      "id": "lemon",
+      "name": "Limon",
+      "unit": "adet",
+      "packageSize": 1,
+      "packageLabel": "adet",
+      "group": "sebze",
+      "macros": [
+        20,
+        0.3,
+        7,
+        0.1
+      ]
+    },
+    {
+      "id": "oats",
+      "name": "Yulaf ezmesi",
+      "unit": "g",
+      "packageSize": 500,
+      "packageLabel": "500 g paket",
+      "group": "bakliyat",
+      "macros": [
+        389,
+        16.9,
+        66.3,
+        6.9
+      ]
+    },
+    {
+      "id": "milk",
+      "name": "UHT süt",
+      "unit": "ml",
+      "packageSize": 1000,
+      "packageLabel": "1 L kutu",
+      "group": "sut",
+      "macros": [
+        61,
+        3.2,
+        4.8,
+        3.4
+      ]
+    },
+    {
+      "id": "banana",
+      "name": "Muz",
+      "unit": "adet",
+      "packageSize": 1,
+      "packageLabel": "adet",
+      "group": "meyve",
+      "macros": [
+        105,
+        1.3,
+        27,
+        0.4
+      ]
+    },
+    {
+      "id": "casein",
+      "name": "Micellar casein tozu",
+      "unit": "g",
+      "packageSize": 700,
+      "packageLabel": "700 g paket (mevcut stok)",
+      "group": "protein",
+      "macros": [
+        360,
+        76.7,
+        6,
+        4
+      ]
+    },
+    {
+      "id": "cinnamon",
+      "name": "Tarçın",
+      "unit": "g",
+      "packageSize": 40,
+      "packageLabel": "40 g paket",
+      "group": "diger",
+      "macros": [
+        247,
+        4,
+        81,
+        1.2
+      ]
+    },
+    {
+      "id": "apple",
+      "name": "Elma",
+      "unit": "adet",
+      "packageSize": 1,
+      "packageLabel": "adet",
+      "group": "meyve",
+      "macros": [
+        95,
+        0.5,
+        25,
+        0.3
+      ]
+    },
+    {
+      "id": "almond",
+      "name": "Badem",
+      "unit": "g",
+      "packageSize": 200,
+      "packageLabel": "200 g paket",
+      "group": "protein",
+      "macros": [
+        579,
+        21.2,
+        21.6,
+        49.9
+      ]
+    },
+    {
+      "id": "oliveoil",
+      "name": "Zeytinyağı",
+      "unit": "ml",
+      "packageSize": 500,
+      "packageLabel": "500 ml şişe",
+      "group": "diger",
+      "macros": [
+        810,
+        0,
+        0,
+        91
+      ]
+    },
+    {
+      "id": "cumin",
+      "name": "Kimyon",
+      "unit": "g",
+      "packageSize": 40,
+      "packageLabel": "40 g paket",
+      "group": "diger",
+      "macros": [
+        375,
+        17.8,
+        44,
+        22.3
+      ]
+    },
+    {
+      "id": "paprika",
+      "name": "Toz kırmızı biber",
+      "unit": "g",
+      "packageSize": 50,
+      "packageLabel": "50 g paket",
+      "group": "diger",
+      "macros": [
+        282,
+        14.1,
+        54,
+        13
+      ]
+    },
+    {
+      "id": "blackpepper",
+      "name": "Karabiber",
+      "unit": "g",
+      "packageSize": 40,
+      "packageLabel": "40 g paket",
+      "group": "diger",
+      "macros": [
+        251,
+        10.4,
+        64,
+        3.3
+      ]
+    },
+    {
+      "id": "chili",
+      "name": "Pul biber",
+      "unit": "g",
+      "packageSize": 50,
+      "packageLabel": "50 g paket",
+      "group": "diger",
+      "macros": [
+        318,
+        12,
+        57,
+        17
+      ]
+    },
+    {
+      "id": "salt",
+      "name": "Tuz",
+      "unit": "g",
+      "packageSize": 500,
+      "packageLabel": "500 g paket",
+      "group": "diger",
+      "macros": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "egg",
+      "name": "Yumurta",
+      "unit": "adet",
+      "packageSize": 10,
+      "packageLabel": "10'lu koli",
+      "group": "protein",
+      "macros": [
+        72,
+        6.3,
+        0.4,
+        4.8
+      ]
+    },
+    {
+      "id": "bread",
+      "name": "Tam tahıllı ekmek",
+      "unit": "g",
+      "packageSize": 500,
+      "packageLabel": "500 g paket",
+      "group": "bakliyat",
+      "macros": [
+        247,
+        12,
+        42,
+        4
+      ]
+    },
+    {
+      "id": "tomato",
+      "name": "Domates",
+      "unit": "g",
+      "packageSize": 100,
+      "packageLabel": "açık reyon, 100 g adım",
+      "loose": true,
+      "group": "sebze",
+      "macros": [
+        18,
+        0.9,
+        3.9,
+        0.2
+      ]
+    },
+    {
+      "id": "cucumber",
+      "name": "Salatalık",
+      "unit": "g",
+      "packageSize": 100,
+      "packageLabel": "açık reyon, 100 g adım",
+      "loose": true,
+      "group": "sebze",
+      "macros": [
+        15,
+        0.7,
+        3.6,
+        0.1
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "id": "burrito",
+      "name": "Tavuklu pilavlı burrito",
+      "category": "Ana öğün",
+      "servingLabel": "1 büyük dürüm",
+      "ingredients": [
+        [
+          "chicken",
+          200
+        ],
+        [
+          "tortilla",
+          1
+        ],
+        [
+          "rice",
+          25
+        ],
+        [
+          "cheese",
+          15
+        ],
+        [
+          "onion",
+          20
+        ],
+        [
+          "pepper",
+          50
+        ],
+        [
+          "greens",
+          15
+        ],
+        [
+          "yogurt",
+          30
+        ],
+        [
+          "garlic",
+          2
+        ],
+        [
+          "lemon",
+          0.1
+        ],
+        [
+          "oliveoil",
+          4
+        ],
+        [
+          "cumin",
+          1
+        ],
+        [
+          "paprika",
+          2.4
+        ],
+        [
+          "blackpepper",
+          0.4
+        ],
+        [
+          "salt",
+          0.5
+        ]
+      ],
+      "steps": [
+        "Tavuğu küp doğra, baharat ve az yağla karıştır.",
+        "Pirinci pilav yapıp geniş sığ kaplarda hızla soğut.",
+        "Soğan ve biberi sotele. Tavuğu partiler halinde pişir. En kalın parça 74°C olmalı.",
+        "Tavuğu ve sebzeyi birleştir, pişmiş pirinç ve peynirle dürüme paylaştır.",
+        "Süzme yoğurtlu sosu ve taze yeşilliği ayrı taşı. Bir gün içinde yenmeyecek pirinçli porsiyonları aynı gün dondur."
+      ]
+    },
+    {
+      "id": "oats",
+      "name": "Muzlu çikolatalı overnight oats",
+      "category": "Kahvaltı",
+      "servingLabel": "1 kavanoz",
+      "ingredients": [
+        [
+          "oats",
+          60
+        ],
+        [
+          "milk",
+          250
+        ],
+        [
+          "casein",
+          15
+        ],
+        [
+          "banana",
+          1
+        ],
+        [
+          "cinnamon",
+          1
+        ]
+      ],
+      "steps": [
+        "Kavanoza 60 g yulaf, 250 ml süt ve 15 g kazeini koy.",
+        "Tarçın ekle ve iyice karıştır.",
+        "Buzdolabında en az 4 saat beklet. Muzu sabah ekle.",
+        "Sütlü yulafı okulda güvenli soğuklukta tut."
+      ]
+    },
+    {
+      "id": "snack",
+      "name": "Elma ve badem",
+      "category": "Ara öğün",
+      "servingLabel": "1 ara öğün",
+      "ingredients": [
+        [
+          "apple",
+          1
+        ],
+        [
+          "almond",
+          30
+        ]
+      ],
+      "steps": [
+        "Elmayı yıka.",
+        "30 g bademi ayrı bir kapta porsiyonla.",
+        "Doğrudan çantana koy."
+      ]
+    },
+    {
+      "id": "eggsandwich",
+      "name": "Yumurtalı kaşarlı sandviç",
+      "category": "Kahvaltı",
+      "servingLabel": "1 sandviç",
+      "ingredients": [
+        [
+          "egg",
+          2
+        ],
+        [
+          "bread",
+          90
+        ],
+        [
+          "cheese",
+          25
+        ],
+        [
+          "tomato",
+          80
+        ],
+        [
+          "cucumber",
+          80
+        ]
+      ],
+      "steps": [
+        "İki yumurtayı tamamen pişir.",
+        "Tam tahıllı ekmeğe yumurta, peynir ve sebzeyi ekle.",
+        "Bozulabilir malzemeleri soğuk tut; okulda uzun süre oda sıcaklığında bekletme."
+      ]
+    },
+    {
+      "id": "chickenbowl",
+      "name": "Tavuklu pilav kasesi",
+      "category": "Ana öğün",
+      "servingLabel": "1 kase",
+      "ingredients": [
+        [
+          "chicken",
+          200
+        ],
+        [
+          "rice",
+          65
+        ],
+        [
+          "pepper",
+          80
+        ],
+        [
+          "onion",
+          30
+        ],
+        [
+          "oliveoil",
+          5
+        ],
+        [
+          "yogurt",
+          50
+        ]
+      ],
+      "steps": [
+        "Pirinci pişir, tavukları içi 74°C olacak şekilde hazırla.",
+        "Biber ve soğanı az yağla sotele.",
+        "Malzemeleri bir porsiyon kaba al, yoğurdu ayrı tut.",
+        "Hızla soğut ve aynı gün tüketilmeyecek porsiyonları dondur."
+      ]
+    },
+    {
+      "id": "yogurtbowl",
+      "name": "Yoğurtlu meyveli yulaf",
+      "category": "Kahvaltı",
+      "servingLabel": "1 kase",
+      "ingredients": [
+        [
+          "yogurt",
+          200
+        ],
+        [
+          "oats",
+          40
+        ],
+        [
+          "banana",
+          1
+        ],
+        [
+          "almond",
+          10
+        ]
+      ],
+      "steps": [
+        "Yoğurt ve yulafı karıştır.",
+        "Muzu doğra ve bademi üstüne ekle.",
+        "Soğuk tutarak tüket."
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "id": "protein",
+      "name": "Protein kaynakları"
+    },
+    {
+      "id": "bakliyat",
+      "name": "Tahıl ve ekmek"
+    },
+    {
+      "id": "sut",
+      "name": "Süt ürünleri"
+    },
+    {
+      "id": "sebze",
+      "name": "Sebzeler"
+    },
+    {
+      "id": "meyve",
+      "name": "Meyveler"
+    },
+    {
+      "id": "diger",
+      "name": "Yağ ve baharat"
+    }
+  ],
+  "cautions": [
+    "Malzeme kalori ve makroları yaklaşık değerlerdir. Paket etiketleri önceliklidir.",
+    "Tavuk 74°C iç sıcaklığa ulaşmalı. Pirinç hızlı soğutulup bir gün içinde kullanılmıyorsa dondurulmalı.",
+    "Buzdolabı olmayan okulda tavuklu, pilavlı veya sütlü öğünleri gün boyu oda sıcaklığında bırakma. Güvenli soğuk zincir şarttır."
+  ]
+}
