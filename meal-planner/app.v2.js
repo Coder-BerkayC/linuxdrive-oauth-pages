@@ -9,7 +9,7 @@ const number=n=>new Intl.NumberFormat('tr-TR',{maximumFractionDigits:1}).format(
 const read=(key,fallback)=>{try{let v=localStorage.getItem(key);return v===null?fallback:JSON.parse(v)}catch{return fallback}};
 const write=(key,v)=>{try{localStorage.setItem(key,JSON.stringify(v))}catch{showStatus('Tarayıcı kaydı yapılamadı')}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
-let catalog=null,idx=null,offset=0,dayIndex=0,tab='plan',filter='all',search='',week=null;
+let catalog=null,idx=null,offset=0,dayIndex=0,tab='plan',filter='all',search='',week=null,activeWeekKey=null;
 let profile=read(PRE+'profile',{calories:0,referenceKg:0,proteinPerKg:1.6,proteinManual:0});
 let stocks=read(PRE+'stocks',{}),prices=read(PRE+'prices',{});
 const monday=()=>E.addDays(E.startOfWeek(),offset*7);
@@ -24,6 +24,7 @@ function migrate(){
 }
 function loadWeek(){
  const key=PRE+'week:'+monday();
+ activeWeekKey=key;
  week=read(key,null);
  if(!week||!Array.isArray(week.days)||week.days.length!==7){
    const template=read(PRE+'lastTemplate',null);
@@ -254,7 +255,7 @@ function bind(){
  });
  $('copyAI').onclick=()=>copyText(summaryForAI(),$('copyAI'));
  document.addEventListener('visibilitychange',()=>{
-  if(!document.hidden){const current=E.startOfWeek();if(offset===0&&week&&monday()!==current){loadWeek()}render()}
+  if(!document.hidden){if(offset===0&&activeWeekKey!==PRE+'week:'+monday()){loadWeek()}render()}
  });
 }
 async function init(){
@@ -267,7 +268,7 @@ async function init(){
   if(!catalog||!E.validate(catalog)){$('loadError').textContent='Tarif dosyaları yüklenemedi. İnternet bağlantını kontrol edip yeniden dene.';return}
   showStatus('Çevrimdışı kayıt');
  }
- idx=E.indexCatalog(catalog);migrate();loadWeek();bind();render();renderRecipes();$('mainContent').classList.remove('hidden');$('loadError').classList.add('hidden');
+ idx=E.indexCatalog(catalog);migrate();loadWeek();const now=E.dateOnly();dayIndex=Math.round((Date.parse(now+'T12:00:00Z')-Date.parse(E.startOfWeek(now)+'T12:00:00Z'))/86400000);bind();render();renderRecipes();$('mainContent').classList.remove('hidden');$('loadError').classList.add('hidden');
 }
 init();
 })();
