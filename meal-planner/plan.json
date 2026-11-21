@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "title": "Haftalık Market Planı",
+  "servings": {
+    "burrito": 10,
+    "breakfast": 5,
+    "snack": 5
+  },
+  "notes": [
+    "Okul günleri için 10 tavuklu pilavlı burrito, 5 kahvaltılık yulaf ve 5 ara öğün.",
+    "Süzme yoğurt sosu dürümden ayrı taşınır.",
+    "Tavuk ve pirinçli öğünleri güvenli soğuklukta tut. Buzdolabı yoksa akşam öğünü için güvenli taşıma doğrulanmalı."
+  ],
+  "categories": [
+    {
+      "id": "burrito",
+      "name": "Burrito",
+      "icon": "🥙"
+    },
+    {
+      "id": "breakfast",
+      "name": "Kahvaltı",
+      "icon": "🥣"
+    },
+    {
+      "id": "snack",
+      "name": "Ara öğün",
+      "icon": "🌰"
+    },
+    {
+      "id": "pantry",
+      "name": "Evde varsa alma",
+      "icon": "🧂"
+    }
+  ],
+  "items": [
+    {
+      "id": "chicken",
+      "category": "burrito",
+      "name": "Tavuk göğsü",
+      "use": "2 kg çiğ",
+      "buy": "2 × 1 kg paket veya 2 kg",
+      "stockable": false
+    },
+    {
+      "id": "tortilla",
+      "category": "burrito",
+      "name": "Büyük tortilla, yaklaşık 25 cm",
+      "use": "10 adet",
+      "buy": "2 × 6'lı paket",
+      "stockable": true
+    },
+    {
+      "id": "rice",
+      "category": "burrito",
+      "name": "Pilavlık pirinç",
+      "use": "250 g çiğ",
+      "buy": "1 × 1 kg paket",
+      "stockable": true
+    },
+    {
+      "id": "cheese",
+      "category": "burrito",
+      "name": "Kaşar veya mozzarella",
+      "use": "150 g",
+      "buy": "1 × 200 ya da 250 g paket",
+      "stockable": true
+    },
+    {
+      "id": "onion",
+      "category": "burrito",
+      "name": "Kuru soğan",
+      "use": "2 adet",
+      "buy": "2 adet",
+      "stockable": false
+    },
+    {
+      "id": "pepper",
+      "category": "burrito",
+      "name": "Kapya veya yeşil biber",
+      "use": "500 g",
+      "buy": "Yaklaşık 500 g",
+      "stockable": false
+    },
+    {
+      "id": "greens",
+      "category": "burrito",
+      "name": "Marul veya roka",
+      "use": "5 küçük porsiyon",
+      "buy": "1 küçük marul veya 1 paket roka",
+      "stockable": false
+    },
+    {
+      "id": "yogurt",
+      "category": "burrito",
+      "name": "Süzme yoğurt",
+      "use": "300 g (sos)",
+      "buy": "1 × 500 g kase",
+      "stockable": true
+    },
+    {
+      "id": "garlic",
+      "category": "burrito",
+      "name": "Sarımsak",
+      "use": "3 diş + sos",
+      "buy": "1 baş",
+      "stockable": true
+    },
+    {
+      "id": "lemon",
+      "category": "burrito",
+      "name": "Limon",
+      "use": "Sos için",
+      "buy": "1 veya 2 adet",
+      "stockable": false
+    },
+    {
+      "id": "oats",
+      "category": "breakfast",
+      "name": "Yulaf ezmesi",
+      "use": "300 g",
+      "buy": "1 × 500 g paket",
+      "stockable": true
+    },
+    {
+      "id": "milk",
+      "category": "breakfast",
+      "name": "UHT süt",
+      "use": "1,25 L",
+      "buy": "1 L + 500 ml veya 2 × 1 L",
+      "stockable": true
+    },
+    {
+      "id": "banana",
+      "category": "breakfast",
+      "name": "Muz",
+      "use": "5 adet",
+      "buy": "5 adet",
+      "stockable": false
+    },
+    {
+      "id": "casein",
+      "category": "breakfast",
+      "name": "Micellar casein",
+      "use": "75 g (5 × 15 g)",
+      "buy": "Mevcut stoktan, gerekmedikçe alma",
+      "stockable": true,
+      "optional": true
+    },
+    {
+      "id": "cinnamon",
+      "category": "breakfast",
+      "name": "Tarçın",
+      "use": "Az miktar",
+      "buy": "Evde yoksa 1 küçük paket",
+      "stockable": true,
+      "optional": true
+    },
+    {
+      "id": "apple",
+      "category": "snack",
+      "name": "Elma",
+      "use": "5 adet",
+      "buy": "5 adet",
+      "stockable": false
+    },
+    {
+      "id": "almond",
+      "category": "snack",
+      "name": "Badem (kaju değil)",
+      "use": "150 g ara öğün, isteğe göre yulafa ek 50 g",
+      "buy": "1 × 200 g paket",
+      "stockable": true
+    },
+    {
+      "id": "oliveoil",
+      "category": "pantry",
+      "name": "Zeytinyağı",
+      "use": "Yaklaşık 30 ila 50 ml",
+      "buy": "Evde yoksa 1 × 500 ml şişe",
+      "stockable": true
+    },
+    {
+      "id": "cumin",
+      "category": "pantry",
+      "name": "Kimyon",
+      "use": "2 tatlı kaşığı",
+      "buy": "Evde yoksa küçük paket",
+      "stockable": true
+    },
+    {
+      "id": "paprika",
+      "category": "pantry",
+      "name": "Tatlı toz kırmızı biber",
+      "use": "2 yemek kaşığı",
+      "buy": "Evde yoksa küçük paket",
+      "stockable": true
+    },
+    {
+      "id": "blackpepper",
+      "category": "pantry",
+      "name": "Karabiber",
+      "use": "1 tatlı kaşığı",
+      "buy": "Evde yoksa küçük paket",
+      "stockable": true
+    },
+    {
+      "id": "chili",
+      "category": "pantry",
+      "name": "Pul biber",
+      "use": "1 çay kaşığı, isteğe bağlı",
+      "buy": "Evde yoksa küçük paket",
+      "stockable": true,
+      "optional": true
+    },
+    {
+      "id": "salt",
+      "category": "pantry",
+      "name": "Tuz",
+      "use": "Damak tadına göre",
+      "buy": "Evde yoksa küçük paket",
+      "stockable": true
+    }
+  ],
+  "recipes": [
+    {
+      "name": "Tavuklu pilavlı burrito",
+      "yield": "10 adet",
+      "ingredients": [
+        "2 kg çiğ tavuk göğsü",
+        "250 g çiğ pirinç",
+        "2 soğan, 500 g biber, 3 diş sarımsak",
+        "10 büyük tortilla",
+        "150 g kaşar veya mozzarella",
+        "2 yemek kaşığı zeytinyağı",
+        "2 tatlı kaşığı kimyon, 2 yemek kaşığı tatlı kırmızı biber, 1 tatlı kaşığı karabiber, isteğe göre pul biber ve tuz",
+        "300 g süzme yoğurt ve limon (ayrı sos)"
+      ],
+      "steps": [
+        "Tavuğu 2 cm küpler halinde doğra. Çiğ tavuğu yıkama; kullanılan gereçleri temizle.",
+        "Tavuğu baharat, sarımsak ve zeytinyağıyla karıştır; pişirene kadar soğukta tut.",
+        "250 g pirinci uygun su miktarıyla pişir. Pişen pirinci sığ kaplarda hızla soğut.",
+        "Soğan ve biberi doğrayıp az sıvıyla sotele.",
+        "Tavuğu yaklaşık 500 gramlık dört partide, içi en az 74°C olana kadar pişir.",
+        "Tavuk ve sebzeleri birleştir, pişmiş pirinçten ayrı olarak 10 eşit porsiyon ayır.",
+        "Soğuyan malzemeleri 10 lavaşa dağıt. Her birine 15 g peynir koy, sar ve etiketle.",
+        "Bir gün içinde tüketilmeyecek pirinçli burritoları aynı gün dondur. Sosu ayrı kapta hazırla."
+      ]
+    },
+    {
+      "name": "Muzlu çikolatalı overnight oats",
+      "yield": "1 porsiyon",
+      "ingredients": [
+        "60 g yulaf (yaklaşık 12 silme yemek kaşığı)",
+        "250 ml süt",
+        "15 g çikolatalı micellar casein",
+        "1 orta boy muz",
+        "Tarçın",
+        "İsteğe bağlı 10 g badem (yaklaşık 8 ila 9 adet)"
+      ],
+      "steps": [
+        "Kapaklı kavanoza yulafı ve sütü ekle.",
+        "Kazein ve tarçını topak kalmayana dek karıştır.",
+        "Muzu sabah eklemek üzere ayrı saklayabilirsin.",
+        "En az 4 saat buzdolabında beklet. Okula soğuk taşı.",
+        "Soğuk taşıma mümkün değilse kuru yulaf ve kazeini ayrı, açılmamış UHT sütü ayrı götür; tüketirken karıştır."
+      ]
+    }
+  ],
+  "sourceNote": "Plan sürüm 1.2, 15 Kasım 2026. Fiyatlar kullanıcı girişi olmadan otomatik güncellenmez."
+}
