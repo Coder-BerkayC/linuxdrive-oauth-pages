@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ed">
+<meta name="description" content="Haftalık yemek hazırlığı için pratik alışveriş listesi ve tarifler.">
+<meta name="robots" content="noindex,nofollow">
+<title>Haftalık Marketim</title>
+<style>
+:root{color-scheme:light;--bg:#f6f4ed;--card:#fffefb;--ink:#27302b;--sub:#687168;--border:#dfe5dc;--green:#365c42;--green2:#e0ede2;--orange:#f1e5cb;--shadow:0 5px 25px #2946320d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #9cbcaa;outline-offset:2px}
+main{max-width:850px;margin:auto;padding:20px 14px 80px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:7px 4px 22px}.brand{font-size:13px;letter-spacing:.11em;font-weight:800;color:var(--green);text-transform:uppercase}.muted{color:var(--sub)}h1{font-size:clamp(29px,5vw,42px);line-height:1.12;letter-spacing:-.045em;margin:8px 0}h2{font-size:21px;line-height:1.2;margin:0}h3{font-size:17px;margin:0}p{margin:7px 0}.hero{background:var(--green);color:white;border-radius:24px;padding:25px 22px;margin-bottom:17px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:160px;height:160px;border-radius:100%;right:-40px;top:-50px;background:#ffffff0d}.hero .sub{color:#dbecdc;font-size:14px}.hero .week{display:flex;gap:9px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:22px}.weekLabel{font-size:14px;font-weight:700}.wkBtns{display:flex;gap:6px;flex-wrap:wrap}
+button.ghost{border:1px solid #ffffff55;background:#ffffff16;color:white;border-radius:11px;padding:8px 11px;font-weight:650;font-size:14px}button.ghost:hover{background:#ffffff30}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}.stat{border:1px solid var(--border);background:var(--card);border-radius:18px;padding:15px 12px}.stat strong{display:block;font-size:25px;letter-spacing:-.05em;line-height:1.2}.stat small{color:var(--sub);font-size:12px}
+.progress{height:8px;background:#dce5dd;border-radius:99px;overflow:hidden;margin:16px 0 0}.progress>div{height:100%;background:#94c5a2;transition:width .25s}
+.tabbar{display:flex;background:#e9eee8;padding:4px;border-radius:15px;margin:20px 0 16px;gap:4px}.tabbar button{border:0;background:transparent;color:#506354;border-radius:11px;flex:1;padding:11px 8px;font-size:14px;font-weight:750}.tabbar button.active{background:var(--card);color:var(--green);box-shadow:0 1px 6px #112f1920}
+.toolbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;justify-content:space-between;margin-bottom:16px}.toolbar input{min-width:0;flex:1 1 170px;padding:11px 13px;border:1px solid var(--border);background:var(--card);border-radius:12px;color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:1px solid var(--border);background:var(--card);padding:8px 10px;border-radius:999px;font-size:13px;font-weight:700;color:var(--sub)}.chip.active{background:var(--green);border-color:var(--green);color:white}
+.section{margin:22px 0}.sectionTitle{display:flex;justify-content:space-between;align-items:baseline;margin:0 3px 10px}.sectionTitle small{color:var(--sub)}.list{border:1px solid var(--border);background:var(--card);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}.item{display:flex;align-items:flex-start;gap:12px;padding:15px;border-bottom:1px solid #edf0e9}.item:last-child{border-bottom:0}.tick{appearance:none;width:25px;height:25px;flex:0 0 25px;border-radius:8px;border:2px solid #a3b4a5;background:#fff;display:grid;place-items:center;margin:3px 0 0}.tick:checked{background:var(--green);border-color:var(--green)}.tick:checked:after{content:"✓";color:white;font-weight:900;font-size:17px}.itemBody{flex:1;min-width:0}.itemTop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.name{font-weight:760;line-height:1.3}.purchased .name{text-decoration:line-through;color:#7b867b}.amount{font-size:13px;color:var(--green);font-weight:670;margin-top:4px}.subamount{font-size:12px;color:var(--sub);margin-top:3px}.stocktag{display:inline-flex;margin-top:8px;border:1px solid #d5ded3;background:#f2f7f0;border-radius:999px;padding:4px 9px;color:#4c6f50;font-size:12px;font-weight:700}.stocktag.on{background:#d7e9da;border-color:#91b799}.priceBtn{border:1px solid #dfe6df;background:white;color:var(--sub);border-radius:9px;padding:6px 8px;font-size:12px;white-space:nowrap;min-width:54px}.priceEdit{width:90px;max-width:100%;border:1px solid #b9c9b9;border-radius:7px;padding:5px;font-size:14px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.btn{border:1px solid var(--border);background:var(--card);border-radius:12px;padding:11px 14px;color:var(--ink);font-weight:750;font-size:14px}.btn.primary{background:var(--green);color:white;border-color:var(--green)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.notice{background:#fff9e9;border:1px solid #e9dfc1;border-radius:17px;padding:15px;color:#5f5031;font-size:14px}.notice strong{display:block;margin-bottom:4px}
+.recipe{background:var(--card);border:1px solid var(--border);border-radius:19px;padding:18px 18px 20px;margin-bottom:15px}.recipe .yield{display:inline-block;font-size:13px;color:var(--green);background:var(--green2);border-radius:99px;padding:4px 10px;margin-top:7px}.recipe h3{margin-top:18px}.recipe ul,.recipe ol{padding-left:24px;margin:8px 0}.recipe li{margin:8px 0}.small{font-size:13px;color:var(--sub)}.foot{font-size:12px;color:var(--sub);padding:25px 4px;text-align:center}.hidden{display:none!important}.empty{padding:20px;color:var(--sub);text-align:center}.summary{background:var(--card);border:1px solid var(--border);border-radius:17px;padding:15px;margin-bottom:16px}.summary b{color:var(--green)}
+@media(max-width:440px){main{padding:13px 10px 70px}.hero{padding:21px 17px}.stat{padding:11px 9px}.stat strong{font-size:23px}.item{padding:13px 10px;gap:10px}.name{font-size:15px}.toolbar{display:block}.toolbar input{width:100%;margin-bottom:10px}.btn{flex:1}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><span class="brand">HAFTALIK MARKETİM</span><span class="small" id="syncStatus">Plan yükleniyor</span></div>
+  <section class="hero" aria-labelledby="title">
+    <div class="sub">Tek liste. Her hafta yeniden.</div>
+    <h1 id="title">Alışveriş hazır.</h1>
+    <div class="sub">10 burrito · 5 kahvaltı · 5 ara öğün</div>
+    <div class="progress" aria-label="Alışveriş ilerlemesi"><div id="progressBar" style="width:0%"></div></div>
+    <div class="week">
+      <span class="weekLabel" id="weekLabel">Hafta hesaplanıyor</span>
+      <div class="wkBtns">
+        <button class="ghost" id="previous" aria-label="Önceki hafta">‹</button>
+        <button class="ghost" id="current">Bu hafta</button>
+        <button class="ghost" id="next" aria-label="Sonraki hafta">›</button>
+      </div>
+    </div>
+  </section>
+  <div class="stats">
+    <div class="stat"><strong id="pendingCount">…</strong><small>Alınacak ürün</small></div>
+    <div class="stat"><strong id="doneCount">…</strong><small>Bu hafta alındı</small></div>
+    <div class="stat"><strong id="costTotal">…</strong><small>Kayıtlı fiyat toplamı</small></div>
+  </div>
+  <div class="tabbar" role="tablist">
+    <button data-tab="list" class="active" role="tab" aria-selected="true">Alışveriş</button>
+    <button data-tab="recipes" role="tab" aria-selected="false">Tarifler</button>
+    <button data-tab="info" role="tab" aria-selected="false">Nasıl çalışır?</button>
+  </div>
+  <section id="listPane">
+    <div class="toolbar"><input id="search" type="search" placeholder="Ürün ara..." aria-label="Ürün ara"><div class="chips">
+    <button class="chip active" data-filter="all">Tümü</button>
+    <button class="chip" data-filter="needed">Alınacak</button>
+    <button class="chip" data-filter="done">Alınan</button>
+    </div></div>
+    <div class="summary" id="priceInfo">Fiyat alanına dokunarak Migros'taki paket fiyatını kaydedebilirsin.</div>
+    <div id="sections"></div>
+    <div class="actions">
+      <button class="btn primary" id="copyBtn">Alınacak listeyi kopyala</button>
+      <button class="btn" id="resetBtn">Bu haftanın işaretlerini temizle</button>
+    </div>
+    <div class="notice"><strong>Yemek güvenliği</strong>Okulda buzdolabı yoksa tavuklu ve pirinçli burritoları saatlerce normal sıcaklıkta bekletme. Özellikle akşam öğünü için 4°C veya altında tutulduğunu doğrulayabileceğin soğuk taşıma gerekiyor. Mikrodalgada ısıtmak, güvensiz saklamayı telafi etmez.</div>
+  </section>
+  <section id="recipesPane" class="hidden"><div id="recipes"></div></section>
+  <section id="infoPane" class="hidden">
+    <div class="recipe"><h2>Her hafta otomatik yenilenir</h2>
+      <p>Pazartesi günü açtığında yeni haftanın boş alışveriş listesi gelir. Geçen haftaya oklarla dönebilirsin.</p>
+      <p><b>Evde var</b> olarak işaretlediğin stoklar sonraki haftalarda da hatırlanır. Bitince o işareti kaldır.</p>
+      <p>Bir ürünün fiyatına dokunup Migros'ta gördüğün paket fiyatını yazabilirsin. Fiyatlar cihazında saklanır, ürünler için gerçek zamanlı fiyat sorgusu yapılmaz.</p>
+      <p>Tarifler ve temel ürün miktarları GitHub'daki <code>plan.json</code> dosyasından gelir. Bu dosya güncellendiğinde site tekrar açıldığında yeni planı yükler.</p>
+      <p><b>iPhone:</b> Safari'de Paylaş menüsünden <b>Ana Ekrana Ekle</b> seçeneğini kullan. Böylece tek dokunuşla açabilirsin.</p>
+      <p><b>Gizlilik:</b> İşaretler, fiyatların ve stok tercihlerin yalnızca bu tarayıcıda tutulur, GitHub'a gönderilmez. Tarayıcı verilerini silersen kayıtlar da silinir. Sitenin tarif ve varsayılan listesi herkese açık olabilir.</p>
+    </div>
+  </section>
+  <div class="foot">Basit alışveriş, sade tarifler. Son kullanma tarihlerini ve soğuk taşıma koşullarını kontrol et.</div>
+</main>
+<script>
+(()=>{'use strict';
+const prefix='mealplan:v1:';let plan=null;let weekShift=0;let filter='all';let query='';
+const $=id=>document.getElementById(id);
+const load=(key,fallback)=>{try{const data=localStorage.getItem(key);return data?JSON.parse(data):fallback}catch{return fallback}};
+const save=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch{}};
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dateInIstanbul=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Istanbul'});
+function weekStart(offset=0){
+  const today=new Date(dateInIstanbul()+'T12:00:00Z');const day=today.getUTCDay();
+  today.setUTCDate(today.getUTCDate()-((day+6)%7)+offset*7);return today.toISOString().slice(0,10);
+}
+function dateLabel(iso){return new Intl.DateTimeFormat('tr-TR',{timeZone:'UTC',day:'numeric',month:'short'}).format(new Date(iso+'T12:00:00Z'))}
+function state(){return load(prefix+'week:'+weekStart(weekShift),{})}
+function setState(x){save(prefix+'week:'+weekStart(weekShift),x)}
+function storeStock(){return load(prefix+'stock',{})}
+function storePrice(){return load(prefix+'prices',{})}
+function selected(i){return !!state()[i.id]}
+function stocked(i){return !!storeStock()[i.id]}
+function required(i){return !stocked(i)&&!selected(i)}
+function money(v){return new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0}).format(v)+' TL'}
+function changeTab(tab){
+ document.querySelectorAll('[data-tab]').forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle('active',on);b.setAttribute('aria-selected',String(on))});
+ ['list','recipes','info'].forEach(p=>$(p+'Pane').classList.toggle('hidden',p!==tab));
+}
+function render(){
+ if(!plan)return;
+ const date=new Date(weekStart(weekShift)+'T12:00:00Z');date.setUTCDate(date.getUTCDate()+6);
+ $('weekLabel').textContent=dateLabel(weekStart(weekShift))+' · '+dateLabel(date.toISOString().slice(0,10))+'  |  '+(weekShift===0?'Bu hafta':weekShift<0?'Önceki hafta':'Sonraki hafta');
+ const ss=state(),stocks=storeStock(),prices=storePrice();let done=0,need=0,priced=0,total=0,unknown=0;
+ for(const i of plan.items){
+   if(ss[i.id])done++;
+   if(!ss[i.id]&&!stocks[i.id])need++;
+   if(!stocks[i.id]){const p=Number(prices[i.id]);if(prices[i.id]!==undefined&&Number.isFinite(p)&&p>=0){total+=p;priced++}else unknown++}
+ }
+ $('doneCount').textContent=done;$('pendingCount').textContent=need;$('costTotal').textContent=priced?money(total):'Fiyat gir';
+ $('priceInfo').innerHTML=priced?'<b>'+safe(money(total))+'</b> kayıtlı fiyat toplamı. <span class="muted">Fiyatı eksik '+unknown+' ürün var. Bu kesin fiş tutarı değildir.</span>':'Migros paket fiyatlarını ilgili ürünün <b>Fiyat</b> alanına dokunarak kaydet. Fiyat bilinmediği için toplam henüz hesaplanamıyor.';
+ $('progressBar').style.width=(100*done/Math.max(1,plan.items.length))+'%';
+ const container=$('sections');container.replaceChildren();
+ plan.categories.forEach(cat=>{
+   const filtered=plan.items.filter(i=>i.category===cat.id).filter(i=>(!query||[i.name,i.buy,i.use].join(' ').toLocaleLowerCase('tr').includes(query))&&(filter==='all'||filter==='done'&&ss[i.id]||filter==='needed'&&required(i)));
+   if(!filtered.length)return;
+   const section=document.createElement('section');section.className='section';
+   const heading=document.createElement('div');heading.className='sectionTitle';heading.innerHTML='<h2>'+safe(cat.name)+'</h2><small>'+filtered.length+' ürün</small>';
+   section.append(heading);const list=document.createElement('div');list.className='list';
+   filtered.forEach(i=>{
+     const item=document.createElement('div');item.className='item'+(ss[i.id]?' purchased':'');
+     const tick=document.createElement('input');tick.type='checkbox';tick.className='tick';tick.checked=!!ss[i.id];tick.setAttribute('aria-label',i.name+' satın alındı');
+     tick.addEventListener('change',()=>{const s=state();if(tick.checked)s[i.id]=true;else delete s[i.id];setState(s);render()});
+     const body=document.createElement('div');body.className='itemBody';
+     const top=document.createElement('div');top.className='itemTop';const name=document.createElement('div');name.className='name';name.textContent=i.name;top.append(name);
+     const pBtn=document.createElement('button');pBtn.className='priceBtn';pBtn.type='button';pBtn.textContent=prices[i.id]===undefined?'Fiyat +':money(prices[i.id]);pBtn.setAttribute('aria-label',i.name+' fiyatını düzenle');
+     pBtn.addEventListener('click',()=>{
+       const input=document.createElement('input');input.className='priceEdit';input.type='number';input.min='0';input.step='0.01';input.inputMode='decimal';input.placeholder='TL';input.value=prices[i.id]??'';
+       pBtn.replaceWith(input);input.focus();
+       const end=()=>{const pr=storePrice();if(input.value.trim()==='')delete pr[i.id];else if(Number.isFinite(Number(input.value))&&Number(input.value)>=0)pr[i.id]=Number(input.value);save(prefix+'prices',pr);render()};
+       input.addEventListener('blur',end,{once:true});input.addEventListener('keydown',e=>{if(e.key==='Enter')input.blur()});
+     });
+     top.append(pBtn);
+     const amount=document.createElement('div');amount.className='amount';amount.textContent='Al: '+i.buy;
+     const sub=document.createElement('div');sub.className='subamount';sub.textContent='Haftalık kullanım: '+i.use;
+     body.append(top,amount,sub);
+     if(i.stockable){const stock=document.createElement('button');stock.className='stocktag'+(stocks[i.id]?' on':'');stock.textContent=stocks[i.id]?'✓ Evde var':'Evde var mı?';stock.setAttribute('aria-pressed',String(!!stocks[i.id]));stock.onclick=()=>{const s=storeStock();if(s[i.id])delete s[i.id];else s[i.id]=true;save(prefix+'stock',s);render()};body.append(stock)}
+     item.append(tick,body);list.append(item);
+   });
+   section.append(list);container.append(section);
+ });
+ if(!container.childNodes.length){container.innerHTML='<div class="empty">Bu filtreye uygun ürün yok.</div>'}
+}
+function renderRecipes(){const out=$('recipes');out.replaceChildren();plan.recipes.forEach(r=>{const box=document.createElement('article');box.className='recipe';box.innerHTML='<h2>'+safe(r.name)+'</h2><span class="yield">'+safe(r.yield)+'</span><h3>Malzemeler</h3><ul>'+r.ingredients.map(x=>'<li>'+safe(x)+'</li>').join('')+'</ul><h3>Hazırlanışı</h3><ol>'+r.steps.map(x=>'<li>'+safe(x)+'</li>').join('')+'</ol>';out.append(box)})}
+function copyNeeded(){
+ const ss=state(),stock=storeStock();const lines=['HAFTALIK ALIŞVERİŞ | '+$('weekLabel').textContent];
+ plan.categories.forEach(c=>{const items=plan.items.filter(i=>i.category===c.id&&!ss[i.id]&&!stock[i.id]);if(items.length){lines.push('',c.name);items.forEach(i=>lines.push('☐ '+i.name+' | '+i.buy))}});
+ const txt=lines.join('\n');
+ const temp=document.createElement('textarea');temp.value=txt;temp.style.position='fixed';temp.style.opacity='0';document.body.append(temp);temp.select();
+ const done=()=>{temp.remove();const b=$('copyBtn');b.textContent='Liste kopyalandı ✓';setTimeout(()=>b.textContent='Alınacak listeyi kopyala',1800)};
+ if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(done).catch(()=>{try{document.execCommand('copy')}catch{}done()})}else{try{document.execCommand('copy')}catch{}done()}
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>changeTab(b.dataset.tab)));
+document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));render()}));
+$('search').addEventListener('input',e=>{query=e.target.value.toLocaleLowerCase('tr');render()});
+$('previous').addEventListener('click',()=>{weekShift--;render()});$('next').addEventListener('click',()=>{weekShift++;render()});$('current').addEventListener('click',()=>{weekShift=0;render()});
+$('copyBtn').addEventListener('click',copyNeeded);$('resetBtn').addEventListener('click',()=>{if(confirm('Bu haftanın satın alındı işaretleri temizlensin mi?')){setState({});render()}});
+let lastMonday=weekStart();document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(lastMonday!==weekStart()){weekShift=0;lastMonday=weekStart()}render()}});
+async function init(){try{
+ const response=await fetch('./plan.json?version='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('Sunucu hatası '+response.status);
+ const data=await response.json();if(!data.items||!data.categories||!data.recipes)throw new Error('Plan biçimi geçersiz');plan=data;save(prefix+'cachedPlan',data);$('syncStatus').textContent='Güncel plan';
+}catch(e){plan=load(prefix+'cachedPlan',null);$('syncStatus').textContent=plan?'Çevrimdışı kayıt':'Plan yüklenemedi';if(!plan){$('sections').innerHTML='<div class="notice">Alışveriş dosyası yüklenemedi. Sayfayı yeniden açmayı dene.</div>';return}}
+render();renderRecipes();}
+init();
+})();
+</script>
+</body></html>
