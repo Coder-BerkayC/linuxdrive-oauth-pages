@@ -13,6 +13,8 @@ let catalog=null,idx=null,offset=0,dayIndex=0,tab='plan',filter='all',search='',
 let profile=read(PRE+'profile',{calories:0,referenceKg:0,proteinPerKg:1.6,proteinManual:0});
 let stocks=read(PRE+'stocks',{}),prices=read(PRE+'prices',{});
 let showKitchen=!!read(PRE+'kitchenMeasures',false);
+const openBatchRecipes=new Set();
+const customBatchCounts=new Map();
 const kitchenMeasure=(id,quantity,unit)=>showKitchen&&globalThis.KitchenMeasures?globalThis.KitchenMeasures.format(id,quantity,unit):null;
 function syncKitchenButtons(){
   for(const id of ['kitchenToggleRecipes','kitchenToggleShopping']){
@@ -189,6 +191,76 @@ function renderShopping(){
  }
  if(!container.children.length)container.innerHTML='<div class="panel muted">Bu filtrede ürün bulunamadı.</div>';
 }
+function batchSafetyText(recipe, portions){
+ if(recipe.id==='burrito'||recipe.id==='chickenbowl'){
+  return 'Pirinci tek tencerede ihtiyacın kadar pişir, tavuğu ekipman kapasitesine göre birkaç partide pişir. Tavuk 74°C iç sıcaklığa ulaşmalı. Pilav ve tavuğu sığ kaplarda hızla soğut; hemen tüketilmeyecek porsiyonları aynı gün dondur. Sosu ayrı tut. Dondurulmuş porsiyonu güvenli şekilde çözdür ve iyice ısıt.';
+ }
+ if(recipe.id==='oats'||recipe.id==='yogurtbowl'){
+  return 'Kuru malzemeleri topluca porsiyonlayabilirsin. Süt, yoğurt ve taze meyveyi tüketimden önceki akşam veya aynı gün ekle. Sütlü öğünleri günlerce dışarıda bekletme, soğuk tut.';
+ }
+ if(recipe.id==='eggsandwich'){
+  return 'Ekmek, peynir ve sebzeyi önceden porsiyonla. Yumurtayı tam pişir. Hazır sandviçleri uzun süre oda sıcaklığında tutma; gerektiğinde soğuk taşı.';
+ }
+ return 'Kuru ürünleri topluca porsiyonlayabilirsin. Çabuk bozulan malzemeleri tüketim günü hazırla ve uygun sıcaklıkta sakla.';
+}
+function createBatchPanel(recipe,panel){
+ panel.replaceChildren();
+ const planned=E.plannedPortions(week.days,recipe.id);
+ const hasCustom=customBatchCounts.has(recipe.id);
+ const portions=hasCustom?customBatchCounts.get(recipe.id):(planned||1);
+ const caption=document.createElement('p');
+ caption.className='batch-caption';
+ caption.textContent='Bu haftanın planı: '+number(planned)+' porsiyon'+(planned===0?' (henüz seçilmemiş)':'');
+ panel.append(caption);
+ const row=document.createElement('div');row.className='batch-controls';
+ const label=document.createElement('label');label.textContent='Hazırlanacak porsiyon';
+ const input=document.createElement('input');
+ input.type='number';input.step='0.5';input.min='0.5';input.max='100';input.inputMode='decimal';
+ input.value=portions;input.setAttribute('aria-label',recipe.name+' toplu porsiyon sayısı');
+ label.append(input);
+ const reset=document.createElement('button');reset.className='btn';reset.type='button';reset.textContent='Hafta miktarını kullan';
+ reset.disabled=!hasCustom||planned===0;
+ row.append(label,reset);panel.append(row);
+ const summary=document.createElement('p');summary.className='batch-summary';panel.append(summary);
+ const list=document.createElement('ul');list.className='batch-list';panel.append(list);
+ const prepTitle=document.createElement('h3');prepTitle.textContent='Toplu hazırlık akışı';panel.append(prepTitle);
+ const steps=document.createElement('ol');steps.className='batch-steps';
+ recipe.steps.forEach(step=>{const li=document.createElement('li');li.textContent=step;steps.append(li)});
+ panel.append(steps);
+ const safety=document.createElement('p');safety.className='batch-safety';safety.textContent=batchSafetyText(recipe,portions);panel.append(safety);
+ const help=document.createElement('p');help.className='batch-footnote';
+ help.textContent='Bu sayı yalnızca hazırlık hesabını değiştirir. Haftalık öğün planın ve alışveriş listen aynı kalır.';
+ panel.append(help);
+ function paint(count){
+  const rows=E.batchIngredients(recipe,count,idx);
+  const plannedMacros=recipeMacros(recipe);
+  summary.textContent=number(count)+' porsiyon · yaklaşık '+Math.round(count*plannedMacros.kcal)+' kcal toplam · '+number(count*plannedMacros.protein)+' g protein toplam';
+  list.replaceChildren();
+  rows.forEach(r=>{
+   const li=document.createElement('li');
+   const original=E.amountLabel(r.quantity,r.ingredient.unit);
+   const kitchen=kitchenMeasure(r.id,r.quantity,r.ingredient.unit);
+   const amount=kitchen?kitchen.label+' ('+original+')':original;
+   const strong=document.createElement('strong');strong.textContent=amount;
+   li.append(strong,document.createTextNode(' '+r.ingredient.name));
+   list.append(li);
+  });
+ }
+ paint(portions);
+ input.addEventListener('change',()=>{
+   const newValue=Number(input.value);
+   if(!Number.isFinite(newValue)||newValue<0.5||newValue>100){input.value=String(customBatchCounts.get(recipe.id)??(planned||1));return}
+   const snapped=Math.round(newValue*2)/2;
+   input.value=String(snapped);
+   customBatchCounts.set(recipe.id,snapped);
+   reset.disabled=planned===0;
+   paint(snapped);
+ });
+ reset.addEventListener('click',()=>{
+   if(!planned)return;
+   customBatchCounts.delete(recipe.id);input.value=String(planned);reset.disabled=true;paint(planned);
+ });
+}
 function renderRecipes(){
  const container=$('recipeList');container.replaceChildren();
  for(const recipe of catalog.recipes){
@@ -197,8 +269,27 @@ function renderRecipes(){
   const title=document.createElement('div');title.innerHTML='<h3>'+esc(recipe.name)+'</h3><div class="subline">'+esc(recipe.servingLabel)+' · '+esc(recipe.category)+'</div>';
   const tag=document.createElement('span');tag.className='pill';tag.textContent=Math.round(macro.kcal)+' kcal · '+number(macro.protein)+' g protein';
   head.append(title,tag);card.append(head);
-  const details=document.createElement('details');const summary=document.createElement('summary');summary.textContent='Malzemeler ve tarif';
-  details.append(summary);
+  const actions=document.createElement('div');actions.className='recipe-actions';
+  const batchButton=document.createElement('button');batchButton.type='button';batchButton.className='btn batch-button';
+  const planned=E.plannedPortions(week.days,recipe.id);
+  const isOpen=openBatchRecipes.has(recipe.id);
+  batchButton.textContent=isOpen?'Toplu hazırlığı kapat':'Toplu hazırla ('+number(planned)+')';
+  batchButton.setAttribute('aria-expanded',String(isOpen));
+  const batchPanel=document.createElement('section');batchPanel.className='batch-panel';batchPanel.hidden=!isOpen;
+  const panelId='batch-panel-'+recipe.id;batchPanel.id=panelId;batchButton.setAttribute('aria-controls',panelId);
+  if(isOpen)createBatchPanel(recipe,batchPanel);
+  batchButton.onclick=()=>{
+    if(openBatchRecipes.has(recipe.id))openBatchRecipes.delete(recipe.id);
+    else openBatchRecipes.add(recipe.id);
+    const opened=openBatchRecipes.has(recipe.id);
+    batchButton.textContent=opened?'Toplu hazırlığı kapat':'Toplu hazırla ('+number(E.plannedPortions(week.days,recipe.id))+')';
+    batchButton.setAttribute('aria-expanded',String(opened));
+    batchPanel.hidden=!opened;
+    if(opened)createBatchPanel(recipe,batchPanel);
+  };
+  actions.append(batchButton);card.append(actions);
+  const details=document.createElement('details');const detailSummary=document.createElement('summary');detailSummary.textContent='Bir porsiyonluk tarif';
+  details.append(detailSummary);
   const h=document.createElement('h3');h.textContent='Bir porsiyon için';details.append(h);
   const ul=document.createElement('ul');
   recipe.ingredients.forEach(([id,qty])=>{
@@ -210,7 +301,8 @@ function renderRecipes(){
   });
   details.append(ul);const st=document.createElement('h3');st.textContent='Hazırlık';details.append(st);
   const ol=document.createElement('ol');recipe.steps.forEach(step=>{const li=document.createElement('li');li.textContent=step;ol.append(li)});
-  details.append(ol);card.append(details);container.append(card);
+  details.append(ol);card.append(details);
+  card.append(batchPanel);container.append(card);
  }
 }
 function renderProfile(){
@@ -236,7 +328,7 @@ function summaryForAI(){
 }
 function render(){
  if(!week||!catalog)return;
- renderHeader();renderPlan();renderShopping();renderProfile();
+ renderHeader();renderPlan();renderShopping();renderRecipes();renderProfile();
 }
 function switchTab(value){
  tab=value;
@@ -251,9 +343,9 @@ function forceUpdate(){
 function bind(){
  $('forceUpdateBtn').onclick=forceUpdate;
  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
- $('previous').onclick=()=>{offset--;loadWeek();render()};
- $('next').onclick=()=>{offset++;loadWeek();render()};
- $('now').onclick=()=>{offset=0;dayIndex=0;loadWeek();render()};
+ $('previous').onclick=()=>{offset--;customBatchCounts.clear();loadWeek();render()};
+ $('next').onclick=()=>{offset++;customBatchCounts.clear();loadWeek();render()};
+ $('now').onclick=()=>{offset=0;dayIndex=0;customBatchCounts.clear();loadWeek();render()};
  $('addMeal').onclick=addMeal;
  $('kitchenToggleRecipes').onclick=toggleKitchenMeasures;
  $('kitchenToggleShopping').onclick=toggleKitchenMeasures;
@@ -305,7 +397,7 @@ async function init(){
   if(!catalog||!E.validate(catalog)){$('loadError').textContent='Tarif dosyaları yüklenemedi. İnternet bağlantını kontrol edip yeniden dene.';return}
   showStatus('Çevrimdışı kayıt');
  }
- idx=E.indexCatalog(catalog);migrate();loadWeek();const now=E.dateOnly();dayIndex=Math.round((Date.parse(now+'T12:00:00Z')-Date.parse(E.startOfWeek(now)+'T12:00:00Z'))/86400000);bind();render();renderRecipes();$('mainContent').classList.remove('hidden');$('loadError').classList.add('hidden');
+ idx=E.indexCatalog(catalog);migrate();loadWeek();const now=E.dateOnly();dayIndex=Math.round((Date.parse(now+'T12:00:00Z')-Date.parse(E.startOfWeek(now)+'T12:00:00Z'))/86400000);bind();render();$('mainContent').classList.remove('hidden');$('loadError').classList.add('hidden');
 }
 init();
 })();
