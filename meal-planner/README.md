@@ -18,6 +18,7 @@ GitHub Pages yayın kaynağı `main` ve `/(root)`. Bu alt klasör mevcut LinuxDr
 * Haftalık alışveriş, stok işaretleri, alınan ürünler ve paket fiyatı takibi yapılır.
 * Protein hedefi referans kg × gram/kg veya manuel değerle kişiselleştirilebilir.
 * Tarif kitaplığında 6 tarif ve hazırlama notları bulunur.
+* Her tarifte **Toplu hazırla** düğmesi o haftanın seçili toplam porsiyonlarını sayar. Tüm malzemeleri çiğ/kuru miktarlarıyla porsiyon sayısına göre çarpar. Kullanıcı toplu hazırlık porsiyonunu bağımsız değiştirebilir veya hafta miktarına dönebilir. Bu hesap haftalık öğün ya da alışveriş listesini değiştirmez. Hazırlama ve saklama uyarıları görünür.
 * FreeLLMAPI için güvenli entegrasyon planı vardır; canlı model bağlantısı henüz yoktur.
 
 ## Ana dosyalar
@@ -29,6 +30,7 @@ GitHub Pages yayın kaynağı `main` ve `/(root)`. Bu alt klasör mevcut LinuxDr
 * `catalog.v2.json`: Malzemeler, paket boyutları, yaklaşık makrolar ve tarifler.
 * `DEVELOPMENT_PLAN.md`: Uygulama kararları, aşamalar, güvenlik, AI mimarisi ve testler.
 * `tests/engine.test.cjs`: Hesaplama regresyon testleri.
+* `tests/batch.test.cjs`: Toplu hazırlık porsiyon, pirinç, tavuk ve diğer malzeme hesapları.
 * `plan.json`: Eski sabit liste sürüm 1 verisi, yeni hesaplama motoru bunu kullanmaz.
 
 ## Mutfak ölçüsü dönüşümü
