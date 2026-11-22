@@ -25,3 +25,30 @@ select,input[type="number"],input[type="search"]{border:1px solid #d4ddd3;backgr
 .top-actions{display:flex;gap:9px;align-items:center;justify-content:flex-end}
 .update-button{border:1px solid #c5d7c9;color:var(--green);background:white;padding:6px 10px;border-radius:10px;font-size:12px;font-weight:750;white-space:nowrap}
 .update-button:active{background:var(--greenlight)}
+
+/* Individual recipe batch preparation calculator */
+.recipe-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.batch-button{border-color:#b1cab5;color:var(--green);background:#edf5ee}
+.batch-button[aria-expanded="true"]{background:var(--green);border-color:var(--green);color:white}
+.batch-panel{margin:14px 0 3px;padding:15px;border-radius:15px;background:#f2f7ef;border:1px solid #c9dbca}
+.batch-panel[hidden]{display:none}
+.batch-caption{color:var(--green);font-size:13px;font-weight:800;margin:0 0 11px}
+.batch-controls{display:flex;align-items:end;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.batch-controls label{font-size:12px;font-weight:750;color:var(--sub);display:flex;flex-direction:column;gap:5px}
+.batch-controls input{width:115px;max-width:100%}
+.batch-controls .btn{min-height:42px}
+.batch-summary{font-size:13px;font-weight:800;color:var(--green);margin:12px 0 9px}
+.batch-list{list-style:none;padding:0!important;margin:0 0 18px!important}
+.batch-list li{display:flex;justify-content:space-between;align-items:baseline;gap:8px;border-bottom:1px solid #dfe8db;margin:0!important;padding:8px 1px;font-size:13px;flex-direction:row}
+.batch-list li:last-child{border:0}
+.batch-list strong{font-weight:800;color:var(--green)}
+.batch-steps{padding-left:22px}
+.batch-panel h3{margin:10px 0 6px}
+.batch-safety{background:#fff9e9;border:1px solid #eee1c3;border-radius:12px;padding:12px;color:#695a32;font-size:13px;line-height:1.55}
+.batch-footnote{font-size:12px;color:var(--sub);margin:10px 0 0}
+@media(max-width:440px){
+ .batch-panel{padding:12px 10px}
+ .batch-controls input{width:110px}
+ .batch-list li{flex-direction:column;align-items:flex-start;gap:1px}
+ .batch-button{width:100%}
+}
