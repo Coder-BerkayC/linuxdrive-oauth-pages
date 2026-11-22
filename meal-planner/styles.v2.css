@@ -20,3 +20,8 @@ select,input[type="number"],input[type="search"]{border:1px solid #d4ddd3;backgr
 .measure-toggle.enabled{background:var(--green);color:white;border-color:var(--green)}
 .measure-note{border:1px solid #dce5d5;background:#f4f8f1;border-radius:12px;padding:10px 12px;font-size:12px;color:#506453;margin:10px 0 14px}
 @media(max-width:430px){.panelheader .measure-toggle{font-size:12px;padding:9px 10px}}
+
+/* iOS home screen refresh control */
+.top-actions{display:flex;gap:9px;align-items:center;justify-content:flex-end}
+.update-button{border:1px solid #c5d7c9;color:var(--green);background:white;padding:6px 10px;border-radius:10px;font-size:12px;font-weight:750;white-space:nowrap}
+.update-button:active{background:var(--greenlight)}
