@@ -31,6 +31,13 @@ GitHub Pages yayın kaynağı `main` ve `/(root)`. Bu alt klasör mevcut LinuxDr
 * `tests/engine.test.cjs`: Hesaplama regresyon testleri.
 * `plan.json`: Eski sabit liste sürüm 1 verisi, yeni hesaplama motoru bunu kullanmaz.
 
+## Mutfak ölçüsü dönüşümü
+
+* Tarifler ve alışveriş ekranındaki `Mutfak ölçüsü: Kapalı` düğmesiyle gram ve ml miktarlarının tahmini kaşık, bardak, adet karşılıkları açılır ve kapatılır.
+* 1 çay kaşığı = 5 ml, 1 tatlı kaşığı = 10 ml, 1 yemek kaşığı = 15 ml, 1 standart su bardağı = 200 ml kabul edilir. Her malzemenin kaşığa sığan gram miktarı farklıdır.
+* Dönüşüm açıldığında mutfak karşılığının yanında özgün gram miktarı kalır. Protein miktarı gibi hassas porsiyonlarda tartı önerilir. Tarifin kalori ve protein hesabı değişmez.
+* Tercih Safari'de saklanır, diğer uygulama verileriyle birlikte korunur. Alışverişte satın alınacak paketler her zaman gram veya adet olarak kalır.
+
 ## Kullanım
 
 1. Siteyi iPhone Safari'de açıp Paylaş menüsünden Ana Ekrana Ekle.
