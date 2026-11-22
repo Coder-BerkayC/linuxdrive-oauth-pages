@@ -7,9 +7,10 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="description" content="Yedi günlük yemek planı, tarifler, makro besin hesaplama ve alışveriş listesi.">
 <title>Haftalık Marketim | Beslenme Planlayıcısı</title>
-<link rel="stylesheet" href="./styles.v2.css?v=2.0">
-<script defer src="./engine.v2.js?v=2.0"></script>
-<script defer src="./app.v2.js?v=2.0"></script>
+<link rel="stylesheet" href="./styles.v2.css?v=2.1">
+<script defer src="./engine.v2.js?v=2.1"></script>
+<script defer src="./kitchen.v2.js?v=2.1"></script>
+<script defer src="./app.v2.js?v=2.1"></script>
 </head>
 <body>
 <main>
@@ -87,8 +88,9 @@
     </section>
     <section id="shoppingPane" class="hidden">
       <div class="panel">
-        <h2>Otomatik alışveriş listesi</h2>
+        <div class="panelheader"><h2>Otomatik alışveriş listesi</h2><button id="kitchenToggleShopping" class="btn measure-toggle" type="button" aria-pressed="false">Mutfak ölçüsü: Kapalı</button></div>
         <p class="muted small">Aşağıdaki miktarlar 7 güne seçtiğin bütün tariflerin toplamıdır. Paketler Türkiye'deki yaygın satış boyutlarına yuvarlanır.</p>
+        <p id="shoppingMeasuresNote" class="measure-note hidden">Mutfak ölçüleri yaklaşıktır. Market alışverişinde paket ve gram miktarı esas alınır.</p>
         <p id="shoppingInfo"></p>
         <div class="toolbar">
           <input id="shopSearch" type="search" placeholder="Ürün ara" aria-label="Alışverişte ürün ara">
@@ -110,8 +112,9 @@
     </section>
     <section id="recipesPane" class="hidden">
       <div class="panel">
-        <div class="panelheader"><h2>Tarif kitaplığı</h2><span class="pill">6 tarif</span></div>
+        <div class="panelheader"><h2>Tarif kitaplığı</h2><button id="kitchenToggleRecipes" class="btn measure-toggle" type="button" aria-pressed="false">Mutfak ölçüsü: Kapalı</button></div>
         <p class="small muted">Öğün seçimi sırasında bu tariflerden istediğini kullanabilirsin. Bir porsiyonun kalorisi ve proteini malzemelerden hesaplanır.</p>
+        <p id="recipeMeasuresNote" class="measure-note hidden">1 çay kaşığı 5 ml, 1 tatlı kaşığı 10 ml, 1 yemek kaşığı 15 ml, 1 su bardağı 200 ml kabul edilir. Karşılıklar yaklaşık değerlerdir. Çiğ tavuk gibi hassas porsiyonları tartıyla ölç.</p>
       </div>
       <div id="recipeList"></div>
     </section>
