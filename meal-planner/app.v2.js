@@ -12,6 +12,24 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 let catalog=null,idx=null,offset=0,dayIndex=0,tab='plan',filter='all',search='',week=null,activeWeekKey=null;
 let profile=read(PRE+'profile',{calories:0,referenceKg:0,proteinPerKg:1.6,proteinManual:0});
 let stocks=read(PRE+'stocks',{}),prices=read(PRE+'prices',{});
+let showKitchen=!!read(PRE+'kitchenMeasures',false);
+const kitchenMeasure=(id,quantity,unit)=>showKitchen&&globalThis.KitchenMeasures?globalThis.KitchenMeasures.format(id,quantity,unit):null;
+function syncKitchenButtons(){
+  for(const id of ['kitchenToggleRecipes','kitchenToggleShopping']){
+    const btn=$(id);if(!btn)continue;
+    btn.textContent='Mutfak ölçüsü: '+(showKitchen?'Açık':'Kapalı');
+    btn.setAttribute('aria-pressed',String(showKitchen));
+    btn.classList.toggle('enabled',showKitchen);
+  }
+  for(const id of ['recipeMeasuresNote','shoppingMeasuresNote']){
+    const note=$(id);if(note)note.classList.toggle('hidden',!showKitchen);
+  }
+}
+function toggleKitchenMeasures(){
+  showKitchen=!showKitchen;
+  write(PRE+'kitchenMeasures',showKitchen);
+  syncKitchenButtons();renderShopping();renderRecipes();
+}
 const monday=()=>E.addDays(E.startOfWeek(),offset*7);
 const dateFormat=iso=>new Intl.DateTimeFormat('tr-TR',{timeZone:'UTC',day:'numeric',month:'short'}).format(new Date(iso+'T12:00:00Z'));
 function showStatus(msg){const el=$('status');if(el)el.textContent=msg}
@@ -135,7 +153,11 @@ function itemRow(g){
  const checked=document.createElement('input');checked.className='check';checked.type='checkbox';checked.checked=!!week.purchased[g.id];checked.setAttribute('aria-label',g.ingredient.name+' alındı');
  checked.onchange=()=>{if(checked.checked)week.purchased[g.id]=true;else delete week.purchased[g.id];saveWeek(false);render()};
  const body=document.createElement('div');body.className='body';const name=document.createElement('div');name.className='title';name.textContent=g.ingredient.name;body.append(name);
- const quantity=document.createElement('div');quantity.className='detail';quantity.textContent='Gereken: '+E.amountLabel(g.quantity,g.ingredient.unit);body.append(quantity);
+ const quantity=document.createElement('div');quantity.className='detail';
+ const equivalent=kitchenMeasure(g.id,g.quantity,g.ingredient.unit);
+ quantity.textContent='Gereken: '+(equivalent?equivalent.label+' ('+E.amountLabel(g.quantity,g.ingredient.unit)+')':E.amountLabel(g.quantity,g.ingredient.unit));
+ if(equivalent?.note)quantity.title=equivalent.note;
+ body.append(quantity);
  const need=document.createElement('div');need.className='subdetail';need.textContent='Alınacak: '+E.packageLabel(g);body.append(need);
  const stock=document.createElement('button');stock.className='stock'+(stocks[g.id]?' on':'');stock.textContent=stocks[g.id]?'Evde var ✓':'Evde var mı?';
  stock.onclick=()=>{if(stocks[g.id])delete stocks[g.id];else stocks[g.id]=true;write(PRE+'stocks',stocks);render()};body.append(stock);
@@ -179,7 +201,13 @@ function renderRecipes(){
   details.append(summary);
   const h=document.createElement('h3');h.textContent='Bir porsiyon için';details.append(h);
   const ul=document.createElement('ul');
-  recipe.ingredients.forEach(([id,qty])=>{const li=document.createElement('li');li.textContent=E.amountLabel(qty,idx.ingredients[id].unit)+' '+idx.ingredients[id].name;ul.append(li)});
+  recipe.ingredients.forEach(([id,qty])=>{
+    const li=document.createElement('li'),ingredient=idx.ingredients[id],original=E.amountLabel(qty,ingredient.unit);
+    const equivalent=kitchenMeasure(id,qty,ingredient.unit);
+    li.textContent=(equivalent?equivalent.label+' ('+original+')':original)+' '+ingredient.name;
+    if(equivalent?.note)li.title=equivalent.note;
+    ul.append(li);
+  });
   details.append(ul);const st=document.createElement('h3');st.textContent='Hazırlık';details.append(st);
   const ol=document.createElement('ol');recipe.steps.forEach(step=>{const li=document.createElement('li');li.textContent=step;ol.append(li)});
   details.append(ol);card.append(details);container.append(card);
@@ -221,6 +249,9 @@ function bind(){
  $('next').onclick=()=>{offset++;loadWeek();render()};
  $('now').onclick=()=>{offset=0;dayIndex=0;loadWeek();render()};
  $('addMeal').onclick=addMeal;
+ $('kitchenToggleRecipes').onclick=toggleKitchenMeasures;
+ $('kitchenToggleShopping').onclick=toggleKitchenMeasures;
+ syncKitchenButtons();
  $('cloneDay').onclick=()=>{
   if(!confirm('Seçili günün öğünleri diğer 6 güne kopyalansın mı?'))return;
   const current=E.clone(week.days[dayIndex]);week.days=week.days.map(()=>E.clone(current));saveWeek();render();
