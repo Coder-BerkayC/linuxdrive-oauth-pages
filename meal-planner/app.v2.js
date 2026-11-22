@@ -243,7 +243,13 @@ function switchTab(value){
  document.querySelectorAll('[data-tab]').forEach(b=>{let a=b.dataset.tab===value;b.classList.toggle('active',a);b.setAttribute('aria-selected',String(a))});
  ['plan','shopping','recipes','goals'].forEach(p=>$(p+'Pane').classList.toggle('hidden',p!==value));
 }
+function forceUpdate(){
+ const url = new URL(window.location.href);
+ url.searchParams.set('fresh',String(Date.now()));
+ window.location.replace(url.toString());
+}
 function bind(){
+ $('forceUpdateBtn').onclick=forceUpdate;
  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
  $('previous').onclick=()=>{offset--;loadWeek();render()};
  $('next').onclick=()=>{offset++;loadWeek();render()};
