@@ -70,6 +70,32 @@
       return {id,quantity, packs, purchaseQuantity:packs*ingredient.packageSize, ingredient};
     }).filter(Boolean).sort((a,b)=>a.ingredient.name.localeCompare(b.ingredient.name,'tr'));
   };
+  // Count fractional servings of one recipe across the entire selected week.
+  const plannedPortions = (days, recipeId) => {
+    if (!Array.isArray(days)) return 0;
+    let total = 0;
+    for (const meals of days) {
+      if (!Array.isArray(meals)) continue;
+      for (const meal of meals) {
+        if (meal.recipeId !== recipeId) continue;
+        const count = Number(meal.portions);
+        if (Number.isFinite(count) && count > 0) total += count;
+      }
+    }
+    return total;
+  };
+  // Calculate exact batch ingredient requirements without rounding up to store packages.
+  // Recipe ingredient amounts are stated for a single serving.
+  const batchIngredients = (recipe, portions, index) => {
+    const count = Number(portions);
+    if (!recipe || !Array.isArray(recipe.ingredients) ||
+        !Number.isFinite(count) || count <= 0) return [];
+    return recipe.ingredients.map(([id, quantity]) => ({
+      id,
+      quantity: quantity * count,
+      ingredient: index.ingredients[id],
+    })).filter(x => x.ingredient && Number.isFinite(x.quantity) && x.quantity > 0);
+  };
   const round = (value, decimals=1) => Math.round((value + Number.EPSILON) * 10**decimals) / 10**decimals;
   const amountLabel = (n,unit) => {
     if(unit==='g' && n>=1000)return round(n/1000,2).toLocaleString('tr-TR')+' kg';
@@ -91,5 +117,5 @@
     }
     return catalog.ingredients.every(i=>i.packageSize>0&&Array.isArray(i.macros)&&i.macros.length===4&&i.macros.every(x=>Number.isFinite(x)&&x>=0));
   };
-  root.MealEngine={dateOnly,addDays,startOfWeek,defaultDays,initialWeek,indexCatalog,nutrition,dayNutrition,weekNutrition,groceries,round,amountLabel,packageLabel,validate,clone};
+  root.MealEngine={dateOnly,addDays,startOfWeek,defaultDays,initialWeek,indexCatalog,nutrition,dayNutrition,weekNutrition,groceries,plannedPortions,batchIngredients,round,amountLabel,packageLabel,validate,clone};
 })(globalThis);
