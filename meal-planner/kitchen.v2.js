@@ -50,7 +50,7 @@ function format(id,quantity,unit){
  if(Object.hasOwn(perSpoon,id)){
    const spoonWeight=perSpoon[id];
    const ml=n*15/spoonWeight;
-   const text=volume(ml,'dry',{preferSpoons:id==='oats'&&n<=80});
+   const text=volume(ml,id==='yogurt'?'liquid':'dry',{preferSpoons:id==='oats'&&n<=80});
    return {label:'yaklaşık '+text,note:id==='cheese'?'Rendelenmiş peynir için':id==='rice'?'Çiğ pirinç için':id==='yogurt'?'Kıvamına göre değişir':'Silme kaşık varsayımı'};
  }
  return null;
