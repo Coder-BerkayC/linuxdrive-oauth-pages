@@ -29,6 +29,9 @@ function syncLanguageButton(){
  btn.setAttribute('aria-label',en?'Switch to Turkish':'Switch to English');
  btn.title=en?'Switch to Turkish':'Switch to English';
  document.documentElement.lang=I.get();
+ document.title=en?'My Weekly Groceries | Meal Planner':'Haftalık Marketim | Beslenme Planlayıcısı';
+ const description=document.querySelector('meta[name="description"]');
+ if(description)description.content=en?'Seven day meal planner with recipes, nutrition estimates and a shopping list.':'Yedi günlük yemek planı, tarifler, makro besin hesaplama ve alışveriş listesi.';
 }
 function switchLanguage(){
  I.set(I.get()==='tr'?'en':'tr');write(PRE+'language',I.get());
