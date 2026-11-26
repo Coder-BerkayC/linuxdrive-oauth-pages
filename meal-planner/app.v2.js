@@ -172,23 +172,23 @@ function sumPrice(goods){
 function copyText(text,button){
  const old=button.textContent;
  const fallback=()=>{const area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.opacity='0';document.body.append(area);area.select();try{document.execCommand('copy')}catch{}area.remove()};
- const report=()=>{button.textContent='Kopyalandı';setTimeout(()=>button.textContent=old,1400)};
+ const report=()=>{button.textContent=I.t('Kopyalandı');setTimeout(()=>button.textContent=old,1400)};
  if(navigator.clipboard?.writeText){navigator.clipboard.writeText(text).then(report).catch(()=>{fallback();report()})}else{fallback();report()}
 }
 function itemRow(g){
  const item=document.createElement('div');item.className='item'+(week.purchased[g.id]?' bought':'');
- const checked=document.createElement('input');checked.className='check';checked.type='checkbox';checked.checked=!!week.purchased[g.id];checked.setAttribute('aria-label',g.ingredient.name+' alındı');
+ const checked=document.createElement('input');checked.className='check';checked.type='checkbox';checked.checked=!!week.purchased[g.id];checked.setAttribute('aria-label',ingName(g.id)+' '+(I.get()==='en'?'purchased':'alındı'));
  checked.onchange=()=>{if(checked.checked)week.purchased[g.id]=true;else delete week.purchased[g.id];saveWeek(false);render()};
- const body=document.createElement('div');body.className='body';const name=document.createElement('div');name.className='title';name.textContent=g.ingredient.name;body.append(name);
+ const body=document.createElement('div');body.className='body';const name=document.createElement('div');name.className='title';name.textContent=ingName(g.id);body.append(name);
  const quantity=document.createElement('div');quantity.className='detail';
  const equivalent=kitchenMeasure(g.id,g.quantity,g.ingredient.unit);
- quantity.textContent='Gereken: '+(equivalent?equivalent.label+' ('+E.amountLabel(g.quantity,g.ingredient.unit)+')':E.amountLabel(g.quantity,g.ingredient.unit));
+ quantity.textContent=I.t('Gereken: ')+(equivalent?equivalent.label+' ('+amount(g.quantity,g.ingredient.unit)+')':amount(g.quantity,g.ingredient.unit));
  if(equivalent?.note)quantity.title=equivalent.note;
  body.append(quantity);
- const need=document.createElement('div');need.className='subdetail';need.textContent='Alınacak: '+E.packageLabel(g);body.append(need);
- const stock=document.createElement('button');stock.className='stock'+(stocks[g.id]?' on':'');stock.textContent=stocks[g.id]?'Evde var ✓':'Evde var mı?';
+ const need=document.createElement('div');need.className='subdetail';need.textContent=I.t('Alınacak: ')+pack(g);body.append(need);
+ const stock=document.createElement('button');stock.className='stock'+(stocks[g.id]?' on':'');stock.textContent=I.t(stocks[g.id]?'Evde var ✓':'Evde var mı?');
  stock.onclick=()=>{if(stocks[g.id])delete stocks[g.id];else stocks[g.id]=true;write(PRE+'stocks',stocks);render()};body.append(stock);
- const price=document.createElement('button');price.className='price';price.textContent=prices[g.id]===undefined?'Fiyat gir':money(prices[g.id]);price.setAttribute('aria-label',g.ingredient.name+' birim fiyatını gir');
+ const price=document.createElement('button');price.className='price';price.textContent=prices[g.id]===undefined?I.t('Fiyat gir'):money(prices[g.id]);price.setAttribute('aria-label',ingName(g.id)+I.t(' birim fiyatını gir'));
  price.onclick=()=>{
   const inp=document.createElement('input');inp.className='priceedit';inp.type='number';inp.min='0';inp.step='0.01';inp.inputMode='decimal';inp.placeholder='TL';inp.value=prices[g.id]??'';
   price.replaceWith(inp);inp.focus();
@@ -199,11 +199,11 @@ function itemRow(g){
 }
 function renderShopping(){
  const goods=shopping(),cost=sumPrice(goods),remaining=goods.filter(g=>!stocks[g.id]&&!week.purchased[g.id]);
- $('shoppingInfo').innerHTML='Toplam <b>'+goods.length+'</b> farklı malzeme. Alınacak <b>'+remaining.length+'</b> ürün. Kayıtlı fiyat toplamı <b>'+(cost.priced?money(cost.total):'Henüz yok')+'</b>.'+(cost.unpriced?' <span class="muted">Fiyatı bilinmeyen '+cost.unpriced+' ürün dahil değil.</span>':'');
+ $('shoppingInfo').innerHTML=I.get()==='en'?'Total <b>'+goods.length+'</b> ingredients. <b>'+remaining.length+'</b> items to buy. Estimated price <b>'+(cost.priced?money(cost.total):I.t('Henüz yok'))+'</b>.'+(cost.unpriced?' <span class="muted">'+cost.unpriced+' items without prices are excluded.</span>':''):'Toplam <b>'+goods.length+'</b> farklı malzeme. Alınacak <b>'+remaining.length+'</b> ürün. Kayıtlı fiyat toplamı <b>'+(cost.priced?money(cost.total):'Henüz yok')+'</b>.'+(cost.unpriced?' <span class="muted">Fiyatı bilinmeyen '+cost.unpriced+' ürün dahil değil.</span>':'');
  const container=$('shopGroups');container.replaceChildren();
  for(const group of catalog.groups) {
   const items=goods.filter(g=>g.ingredient.group===group.id).filter(g=>{
-    if(search&&!g.ingredient.name.toLocaleLowerCase('tr').includes(search))return false;
+    if(search&&!(g.ingredient.name+' '+ingName(g.id)).toLocaleLowerCase(I.get()==='en'?'en':'tr').includes(search))return false;
     if(filter==='needed')return !stocks[g.id]&&!week.purchased[g.id];
     if(filter==='bought')return !!week.purchased[g.id];
     if(filter==='stock')return !!stocks[g.id];
@@ -211,12 +211,13 @@ function renderShopping(){
   });
   if(!items.length)continue;
   const s=document.createElement('section');s.className='group';
-  const title=document.createElement('div');title.className='gtitle';title.innerHTML='<h3>'+esc(group.name)+'</h3><small>'+items.length+' ürün</small>';s.append(title);
+  const title=document.createElement('div');title.className='gtitle';title.innerHTML='<h3>'+esc(I.group(group))+'</h3><small>'+items.length+(I.get()==='en'?' items':' ürün')+'</small>';s.append(title);
   const list=document.createElement('div');list.className='items';items.forEach(g=>list.append(itemRow(g)));s.append(list);container.append(s);
  }
- if(!container.children.length)container.innerHTML='<div class="panel muted">Bu filtrede ürün bulunamadı.</div>';
+ if(!container.children.length)container.innerHTML='<div class="panel muted">'+esc(I.t('Bu filtrede ürün bulunamadı.'))+'</div>';
 }
 function batchSafetyText(recipe, portions){
+ if(I.get()==='en')return I.english.batchSafety[recipe.id]||I.english.batchSafety.snack;
  if(recipe.id==='burrito'||recipe.id==='chickenbowl'){
   return 'Pirinci tek tencerede ihtiyacın kadar pişir, tavuğu ekipman kapasitesine göre birkaç partide pişir. Tavuk 74°C iç sıcaklığa ulaşmalı. Pilav ve tavuğu sığ kaplarda hızla soğut; hemen tüketilmeyecek porsiyonları aynı gün dondur. Sosu ayrı tut. Dondurulmuş porsiyonu güvenli şekilde çözdür ve iyice ısıt.';
  }
@@ -235,39 +236,39 @@ function createBatchPanel(recipe,panel){
  const portions=hasCustom?customBatchCounts.get(recipe.id):(planned||1);
  const caption=document.createElement('p');
  caption.className='batch-caption';
- caption.textContent='Bu haftanın planı: '+number(planned)+' porsiyon'+(planned===0?' (henüz seçilmemiş)':'');
+ caption.textContent=I.t('Bu haftanın planı: ')+number(planned)+I.t(' porsiyon')+(planned===0?I.t(' (henüz seçilmemiş)'):'');
  panel.append(caption);
  const row=document.createElement('div');row.className='batch-controls';
- const label=document.createElement('label');label.textContent='Hazırlanacak porsiyon';
+ const label=document.createElement('label');label.textContent=I.t('Hazırlanacak porsiyon');
  const input=document.createElement('input');
  input.type='number';input.step='0.5';input.min='0.5';input.max='100';input.inputMode='decimal';
- input.value=portions;input.setAttribute('aria-label',recipe.name+' toplu porsiyon sayısı');
+ input.value=portions;input.setAttribute('aria-label',recipeName(recipe)+I.t(' toplu porsiyon sayısı'));
  label.append(input);
- const reset=document.createElement('button');reset.className='btn';reset.type='button';reset.textContent='Hafta miktarını kullan';
+ const reset=document.createElement('button');reset.className='btn';reset.type='button';reset.textContent=I.t('Hafta miktarını kullan');
  reset.disabled=!hasCustom||planned===0;
  row.append(label,reset);panel.append(row);
  const summary=document.createElement('p');summary.className='batch-summary';panel.append(summary);
  const list=document.createElement('ul');list.className='batch-list';panel.append(list);
- const prepTitle=document.createElement('h3');prepTitle.textContent='Toplu hazırlık akışı';panel.append(prepTitle);
+ const prepTitle=document.createElement('h3');prepTitle.textContent=I.t('Toplu hazırlık akışı');panel.append(prepTitle);
  const steps=document.createElement('ol');steps.className='batch-steps';
- recipe.steps.forEach(step=>{const li=document.createElement('li');li.textContent=step;steps.append(li)});
+ recipeSteps(recipe).forEach(step=>{const li=document.createElement('li');li.textContent=step;steps.append(li)});
  panel.append(steps);
  const safety=document.createElement('p');safety.className='batch-safety';safety.textContent=batchSafetyText(recipe,portions);panel.append(safety);
  const help=document.createElement('p');help.className='batch-footnote';
- help.textContent='Bu sayı yalnızca hazırlık hesabını değiştirir. Haftalık öğün planın ve alışveriş listen aynı kalır.';
+ help.textContent=I.t('Bu sayı yalnızca hazırlık hesabını değiştirir. Haftalık öğün planın ve alışveriş listen aynı kalır.');
  panel.append(help);
  function paint(count){
   const rows=E.batchIngredients(recipe,count,idx);
   const plannedMacros=recipeMacros(recipe);
-  summary.textContent=number(count)+' porsiyon · yaklaşık '+Math.round(count*plannedMacros.kcal)+' kcal toplam · '+number(count*plannedMacros.protein)+' g protein toplam';
+  summary.textContent=number(count)+I.t(' porsiyon · yaklaşık ')+Math.round(count*plannedMacros.kcal)+I.t(' kcal toplam · ')+number(count*plannedMacros.protein)+I.t(' g protein toplam');
   list.replaceChildren();
   rows.forEach(r=>{
    const li=document.createElement('li');
-   const original=E.amountLabel(r.quantity,r.ingredient.unit);
+   const original=amount(r.quantity,r.ingredient.unit);
    const kitchen=kitchenMeasure(r.id,r.quantity,r.ingredient.unit);
    const amount=kitchen?kitchen.label+' ('+original+')':original;
    const strong=document.createElement('strong');strong.textContent=amount;
-   li.append(strong,document.createTextNode(' '+r.ingredient.name));
+   li.append(strong,document.createTextNode(' '+ingName(r.id)));
    list.append(li);
   });
  }
@@ -291,14 +292,14 @@ function renderRecipes(){
  for(const recipe of catalog.recipes){
   const macro=recipeMacros(recipe),card=document.createElement('article');card.className='recipe';
   const head=document.createElement('div');head.className='recipehead';
-  const title=document.createElement('div');title.innerHTML='<h3>'+esc(recipe.name)+'</h3><div class="subline">'+esc(recipe.servingLabel)+' · '+esc(recipe.category)+'</div>';
+  const title=document.createElement('div');title.innerHTML='<h3>'+esc(recipeName(recipe))+'</h3><div class="subline">'+esc(I.serving(recipe))+' · '+esc(I.category(recipe.category))+'</div>';
   const tag=document.createElement('span');tag.className='pill';tag.textContent=Math.round(macro.kcal)+' kcal · '+number(macro.protein)+' g protein';
   head.append(title,tag);card.append(head);
   const actions=document.createElement('div');actions.className='recipe-actions';
   const batchButton=document.createElement('button');batchButton.type='button';batchButton.className='btn batch-button';
   const planned=E.plannedPortions(week.days,recipe.id);
   const isOpen=openBatchRecipes.has(recipe.id);
-  batchButton.textContent=isOpen?'Toplu hazırlığı kapat':'Toplu hazırla ('+number(planned)+')';
+  batchButton.textContent=isOpen?I.t('Toplu hazırlığı kapat'):I.t('Toplu hazırla (')+number(planned)+')';
   batchButton.setAttribute('aria-expanded',String(isOpen));
   const batchPanel=document.createElement('section');batchPanel.className='batch-panel';batchPanel.hidden=!isOpen;
   const panelId='batch-panel-'+recipe.id;batchPanel.id=panelId;batchButton.setAttribute('aria-controls',panelId);
@@ -307,25 +308,25 @@ function renderRecipes(){
     if(openBatchRecipes.has(recipe.id))openBatchRecipes.delete(recipe.id);
     else openBatchRecipes.add(recipe.id);
     const opened=openBatchRecipes.has(recipe.id);
-    batchButton.textContent=opened?'Toplu hazırlığı kapat':'Toplu hazırla ('+number(E.plannedPortions(week.days,recipe.id))+')';
+    batchButton.textContent=opened?I.t('Toplu hazırlığı kapat'):I.t('Toplu hazırla (')+number(E.plannedPortions(week.days,recipe.id))+')';
     batchButton.setAttribute('aria-expanded',String(opened));
     batchPanel.hidden=!opened;
     if(opened)createBatchPanel(recipe,batchPanel);
   };
   actions.append(batchButton);card.append(actions);
-  const details=document.createElement('details');const detailSummary=document.createElement('summary');detailSummary.textContent='Bir porsiyonluk tarif';
+  const details=document.createElement('details');const detailSummary=document.createElement('summary');detailSummary.textContent=I.t('Bir porsiyonluk tarif');
   details.append(detailSummary);
-  const h=document.createElement('h3');h.textContent='Bir porsiyon için';details.append(h);
+  const h=document.createElement('h3');h.textContent=I.t('Bir porsiyon için');details.append(h);
   const ul=document.createElement('ul');
   recipe.ingredients.forEach(([id,qty])=>{
-    const li=document.createElement('li'),ingredient=idx.ingredients[id],original=E.amountLabel(qty,ingredient.unit);
+    const li=document.createElement('li'),ingredient=idx.ingredients[id],original=amount(qty,ingredient.unit);
     const equivalent=kitchenMeasure(id,qty,ingredient.unit);
-    li.textContent=(equivalent?equivalent.label+' ('+original+')':original)+' '+ingredient.name;
+    li.textContent=(equivalent?equivalent.label+' ('+original+')':original)+' '+ingName(id);
     if(equivalent?.note)li.title=equivalent.note;
     ul.append(li);
   });
-  details.append(ul);const st=document.createElement('h3');st.textContent='Hazırlık';details.append(st);
-  const ol=document.createElement('ol');recipe.steps.forEach(step=>{const li=document.createElement('li');li.textContent=step;ol.append(li)});
+  details.append(ul);const st=document.createElement('h3');st.textContent=I.t('Hazırlık');details.append(st);
+  const ol=document.createElement('ol');recipeSteps(recipe).forEach(step=>{const li=document.createElement('li');li.textContent=step;ol.append(li)});
   details.append(ol);card.append(details);
   card.append(batchPanel);container.append(card);
  }
