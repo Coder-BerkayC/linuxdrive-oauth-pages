@@ -1,11 +1,19 @@
 (function(){
 'use strict';
 const E=globalThis.MealEngine;
+const I=globalThis.MealI18n;
 const PRE='mealplanner:v2:';
 const $=id=>document.getElementById(id);
+I.set((()=>{try{return JSON.parse(localStorage.getItem(PRE+'language'))}catch{return 'tr'}})());
 const weekdays=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
-const money=n=>new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0}).format(n)+' TL';
-const number=n=>new Intl.NumberFormat('tr-TR',{maximumFractionDigits:1}).format(n);
+const money=n=>I.money(n);
+const number=n=>I.number(n);
+const dayName=i=>I.weekDay(i);
+const ingName=id=>I.ingredient(idx.ingredients[id]);
+const recipeName=r=>I.recipeName(r);
+const recipeSteps=r=>I.recipeSteps(r);
+const amount=(qty,unit)=>I.fmtAmount(E.amountLabel(qty,unit),unit);
+const pack=g=>I.packageLabel(g)||E.packageLabel(g);
 const read=(key,fallback)=>{try{let v=localStorage.getItem(key);return v===null?fallback:JSON.parse(v)}catch{return fallback}};
 const write=(key,v)=>{try{localStorage.setItem(key,JSON.stringify(v))}catch{showStatus('Tarayıcı kaydı yapılamadı')}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
@@ -13,13 +21,30 @@ let catalog=null,idx=null,offset=0,dayIndex=0,tab='plan',filter='all',search='',
 let profile=read(PRE+'profile',{calories:0,referenceKg:0,proteinPerKg:1.6,proteinManual:0});
 let stocks=read(PRE+'stocks',{}),prices=read(PRE+'prices',{});
 let showKitchen=!!read(PRE+'kitchenMeasures',false);
+let lastStatus='Yükleniyor';
+function syncLanguageButton(){
+ const btn=$('langToggle');if(!btn)return;
+ const en=I.get()==='en';
+ btn.innerHTML=en?'TR / <strong>EN</strong>':'<strong>TR</strong> / EN';
+ btn.setAttribute('aria-label',en?'Switch to Turkish':'Switch to English');
+ btn.title=en?'Switch to Turkish':'Switch to English';
+ document.documentElement.lang=I.get();
+}
+function switchLanguage(){
+ I.set(I.get()==='tr'?'en':'tr');write(PRE+'language',I.get());
+ syncLanguageButton();syncKitchenButtons();showStatus(lastStatus);
+ render();I.translateStatic();
+}
 const openBatchRecipes=new Set();
 const customBatchCounts=new Map();
-const kitchenMeasure=(id,quantity,unit)=>showKitchen&&globalThis.KitchenMeasures?globalThis.KitchenMeasures.format(id,quantity,unit):null;
+const kitchenMeasure=(id,quantity,unit)=>{
+ const raw=showKitchen&&globalThis.KitchenMeasures?globalThis.KitchenMeasures.format(id,quantity,unit):null;
+ return raw?I.measure(raw):null;
+};
 function syncKitchenButtons(){
   for(const id of ['kitchenToggleRecipes','kitchenToggleShopping']){
     const btn=$(id);if(!btn)continue;
-    btn.textContent='Mutfak ölçüsü: '+(showKitchen?'Açık':'Kapalı');
+    btn.textContent=I.t('Mutfak ölçüsü: ')+I.t(showKitchen?'Açık':'Kapalı');
     btn.setAttribute('aria-pressed',String(showKitchen));
     btn.classList.toggle('enabled',showKitchen);
   }
@@ -33,8 +58,8 @@ function toggleKitchenMeasures(){
   syncKitchenButtons();renderShopping();renderRecipes();
 }
 const monday=()=>E.addDays(E.startOfWeek(),offset*7);
-const dateFormat=iso=>new Intl.DateTimeFormat('tr-TR',{timeZone:'UTC',day:'numeric',month:'short'}).format(new Date(iso+'T12:00:00Z'));
-function showStatus(msg){const el=$('status');if(el)el.textContent=msg}
+const dateFormat=iso=>new Intl.DateTimeFormat(I.get()==='en'?'en-US':'tr-TR',{timeZone:'UTC',day:'numeric',month:'short'}).format(new Date(iso+'T12:00:00Z'));
+function showStatus(msg){lastStatus=msg;const el=$('status');if(el)el.textContent=I.t(msg)}
 function migrate(){
  if(read(PRE+'migrated',false))return;
  const s=read('mealplan:v1:stock',{}),p=read('mealplan:v1:prices',{});
@@ -70,17 +95,17 @@ const shopping=()=>E.groceries(week.days,idx);
 function renderHeader(){
  const m=monday(),last=E.addDays(m,6),dayTotals=totals(),goods=shopping();
  const sum=dayTotals.reduce((a,d)=>{a.kcal+=d.kcal;a.protein+=d.protein;return a},{kcal:0,protein:0});
- $('weekLabel').textContent=dateFormat(m)+' ile '+dateFormat(last)+(offset===0?' · Bu hafta':'');
- $('avgCalories').textContent=Math.round(sum.kcal/7).toLocaleString('tr-TR');
+ $('weekLabel').textContent=dateFormat(m)+' '+I.t('ile')+' '+dateFormat(last)+(offset===0?I.t(' · Bu hafta'):'');
+ $('avgCalories').textContent=Math.round(sum.kcal/7).toLocaleString(I.get()==='en'?'en-US':'tr-TR');
  $('avgProtein').textContent=number(sum.protein/7)+' g';
  $('ingredientCount').textContent=goods.length;
 }
 function mealOptions(selected){
  const frag=document.createDocumentFragment();
  const cats=[...new Set(catalog.recipes.map(x=>x.category))];
- cats.forEach(c=>{const og=document.createElement('optgroup');og.label=c;
+ cats.forEach(c=>{const og=document.createElement('optgroup');og.label=I.category(c);
  catalog.recipes.filter(x=>x.category===c).forEach(r=>{
-   const opt=document.createElement('option');opt.value=r.id;opt.textContent=r.name;opt.selected=r.id===selected;og.append(opt);
+   const opt=document.createElement('option');opt.value=r.id;opt.textContent=recipeName(r);opt.selected=r.id===selected;og.append(opt);
  });frag.append(og)});
  return frag;
 }
@@ -95,44 +120,44 @@ function renderPlan(){
  dayTotals.forEach((d,i)=>{
  const btn=document.createElement('button');btn.className='daybtn'+(i===dayIndex?' active':'');
  btn.setAttribute('aria-pressed',String(i===dayIndex));
- btn.innerHTML='<strong>'+weekdays[i]+'</strong><small>'+dateFormat(E.addDays(m,i))+'</small>';
+ btn.innerHTML='<strong>'+dayName(i)+'</strong><small>'+dateFormat(E.addDays(m,i))+'</small>';
  btn.onclick=()=>{dayIndex=i;renderPlan()};
  days.append(btn);
  });
- $('dayHeading').textContent=weekdays[dayIndex]+' · '+dateFormat(E.addDays(m,dayIndex));
+ $('dayHeading').textContent=dayName(dayIndex)+' · '+dateFormat(E.addDays(m,dayIndex));
  const meals=week.days[dayIndex],list=$('slots');list.replaceChildren();
  meals.forEach((meal,pos)=>{
   const card=document.createElement('div');card.className='slot';
   const head=document.createElement('div');head.className='slotHead';
-  const title=document.createElement('label');title.textContent='Öğün '+(pos+1);
-  const nm=document.createElement('span');nm.className='small muted';nm.textContent=(idx.recipes[meal.recipeId]?.category)||'Tarif seç';
+  const title=document.createElement('label');title.textContent=I.t('Öğün ')+(pos+1);
+  const nm=document.createElement('span');nm.className='small muted';nm.textContent=idx.recipes[meal.recipeId]?I.category(idx.recipes[meal.recipeId].category):I.t('Tarif seç');
   head.append(title,nm);
   const fields=document.createElement('div');fields.className='slotFields';
-  const choice=document.createElement('select');choice.setAttribute('aria-label',(pos+1)+'. öğün tarifi');
+  const choice=document.createElement('select');choice.setAttribute('aria-label',(pos+1)+'. '+I.t('öğün tarifi'));
   choice.append(mealOptions(meal.recipeId));
   choice.addEventListener('change',()=>{meal.recipeId=choice.value;saveWeek();render()});
   const p=document.createElement('input');p.type='number';p.step='0.5';p.min='0.5';p.max='10';p.value=meal.portions;
-  p.setAttribute('aria-label','Porsiyon sayısı');
+  p.setAttribute('aria-label',I.t('Porsiyon sayısı'));
   p.addEventListener('change',()=>{const n=Number(p.value);meal.portions=Number.isFinite(n)?Math.min(10,Math.max(0.5,n)):1;p.value=meal.portions;saveWeek();render()});
-  const remove=document.createElement('button');remove.type='button';remove.className='delbtn';remove.textContent='×';remove.title='Öğünü sil';remove.setAttribute('aria-label','Öğünü sil');
+  const remove=document.createElement('button');remove.type='button';remove.className='delbtn';remove.textContent='×';remove.title=I.t('Öğünü sil');remove.setAttribute('aria-label',I.t('Öğünü sil'));
   remove.onclick=()=>{meals.splice(pos,1);saveWeek();render()};
   fields.append(choice,p,remove);card.append(head,fields);list.append(card);
  });
- $('mealCountText').textContent=meals.length+' öğün';
+ $('mealCountText').textContent=meals.length+I.t(' öğün');
  $('addMeal').disabled=meals.length>=8;
  const selected=dayTotals[dayIndex],goal=goals();
  $('todayMacros').innerHTML=[
- ['Kalori',Math.round(selected.kcal)+' kcal'],['Protein',number(selected.protein)+' g'],
- ['Karbonhidrat',number(selected.carbs)+' g'],['Yağ',number(selected.fat)+' g']
+ [I.t('Kalori'),Math.round(selected.kcal)+' kcal'],[I.t('Protein'),number(selected.protein)+' g'],
+ [I.t('Karbonhidrat'),number(selected.carbs)+' g'],[I.t('Yağ'),number(selected.fat)+' g']
  ].map(x=>'<div class="macro"><b>'+esc(x[1])+'</b><span>'+esc(x[0])+'</span></div>').join('');
- $('calorieTargetText').textContent=goal.calories?Math.round(selected.kcal)+' / '+goal.calories+' kcal':'Kalori hedefini Hedefler sekmesinden girebilirsin.';
- $('proteinTargetText').textContent=goal.protein?number(selected.protein)+' / '+number(goal.protein)+' g protein':'Protein hedefini Hedefler sekmesinden girebilirsin.';
+ $('calorieTargetText').textContent=goal.calories?Math.round(selected.kcal)+' / '+goal.calories+' kcal':I.t('Kalori hedefini Hedefler sekmesinden girebilirsin.');
+ $('proteinTargetText').textContent=goal.protein?number(selected.protein)+' / '+number(goal.protein)+' g protein':I.t('Protein hedefini Hedefler sekmesinden girebilirsin.');
  $('calorieProgress').style.width=(goal.calories?Math.min(100,selected.kcal/goal.calories*100):0)+'%';
  $('proteinProgress').style.width=(goal.protein?Math.min(100,selected.protein/goal.protein*100):0)+'%';
  const body=$('weekRows');body.replaceChildren();
  dayTotals.forEach((day,i)=>{
   const tr=document.createElement('tr');
-  [weekdays[i],week.days[i].length+' öğün',Math.round(day.kcal).toLocaleString('tr-TR'),number(day.protein)+' g'].forEach(value=>{const td=document.createElement('td');td.textContent=value;tr.append(td)});
+  [dayName(i),week.days[i].length+I.t(' öğün'),Math.round(day.kcal).toLocaleString(I.get()==='en'?'en-US':'tr-TR'),number(day.protein)+' g'].forEach(value=>{const td=document.createElement('td');td.textContent=value;tr.append(td)});
   body.append(tr);
  });
 }
