@@ -337,6 +337,8 @@ const en={
     "burrito": "Cook all the rice for the batch in one pot. Cook chicken in several batches if needed, checking for a minimum internal temperature of 74°C (165°F). Cool rice and chicken quickly in shallow containers and freeze servings you will not eat right away on the same day. Pack sauce separately. Thaw safely and reheat thoroughly.",
     "oats": "You can portion dry ingredients in advance. Add milk, yogurt or fresh fruit the night before or on the day of eating. Refrigerate dairy meals and do not leave them at room temperature for hours.",
     "eggsandwich": "Portion bread, cheese and vegetables ahead of time. Cook eggs completely. Keep prepared sandwiches chilled rather than leaving them at room temperature for hours.",
+    "chickenbowl": "Cook the rice in one pot and cook the chicken in batches if necessary until its internal temperature reaches 74°C (165°F). Cool cooked rice and chicken quickly in shallow containers. Freeze portions you will not eat right away on the same day. Pack yogurt separately and keep the food cold.",
+    "yogurtbowl": "You can portion dry ingredients in advance. Add yogurt and fresh fruit shortly before eating. Keep prepared dairy meals refrigerated and do not leave them at room temperature for hours.",
     "snack": "Portion shelf stable ingredients in advance. Prepare perishable ingredients on the day you eat them and store them at a safe temperature."
   }
 };
