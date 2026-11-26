@@ -52,3 +52,10 @@ select,input[type="number"],input[type="search"]{border:1px solid #d4ddd3;backgr
  .batch-list li{flex-direction:column;align-items:flex-start;gap:1px}
  .batch-button{width:100%}
 }
+
+/* Accessible language selector for the Home Screen app */
+.lang-toggle{border:1px solid #b7cbbd;background:white;color:#5b6b5e;border-radius:10px;padding:6px 9px;font-size:12px;font-weight:600;white-space:nowrap}
+.lang-toggle strong{font-weight:900;color:var(--green);text-decoration:underline;text-underline-offset:3px}
+.lang-toggle:focus-visible{outline:3px solid #93bda0;outline-offset:2px}
+.top-actions{gap:7px;flex-wrap:wrap}
+@media(max-width:430px){.top{align-items:center;gap:6px}.brand{font-size:10px;letter-spacing:.08em}.top-actions{gap:5px}.top-actions small{font-size:10px}.lang-toggle,.update-button{font-size:11px;padding:6px 7px}}
