@@ -163,6 +163,7 @@ const en={
     "Günlük ort. protein": "Avg. daily protein",
     "Farklı malzeme": "Different ingredients",
     "7 Gün": "7 Days",
+    "Kalori Dengesi": "Energy Balance",
     "Alışveriş": "Shopping",
     "Tarifler": "Recipes",
     "Hedefler": "Goals",
