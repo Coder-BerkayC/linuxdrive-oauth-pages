@@ -337,24 +337,24 @@ function renderProfile(){
  $('proteinFactor').value=profile.proteinPerKg||1.6;
  $('proteinManual').value=profile.proteinManual||'';
  const g=goals();
- $('proteinEstimate').textContent=g.protein?'Günlük protein hedefin: '+number(g.protein)+' g':'Protein hedefi için referans ağırlık gir.';
+ $('proteinEstimate').textContent=g.protein?I.t('Günlük protein hedefin: ')+number(g.protein)+' g':I.t('Protein hedefi için referans ağırlık gir.');
  const daily=totals();
  const avg=daily.reduce((a,d)=>a+d.protein,0)/7;
- $('averageNutrition').textContent='Bu haftanın günlük protein ortalaması: '+number(avg)+' g.';
+ $('averageNutrition').textContent=I.t('Bu haftanın günlük protein ortalaması: ')+number(avg)+' g.';
 }
 function summaryForAI(){
  const g=goals(),d=totals();const lines=[
- '7 günlük beslenme planı (yaklaşık değerler)',
- 'Hedef kcal: '+(g.calories||'Belirlenmedi')+'; protein: '+(g.protein?number(g.protein)+' g':'Belirlenmedi'),
- 'Sayısal hesapları yeniden uydurma. Tarifleri, çeşitliliği ve pratikliği değerlendir. Tıbbi tanı verme.'
+ I.get()==='en'?'Seven day meal plan (approximate values)':'7 günlük beslenme planı (yaklaşık değerler)',
+ (I.get()==='en'?'Target kcal: ':'Hedef kcal: ')+(g.calories||I.t('Belirlenmedi'))+'; protein: '+(g.protein?number(g.protein)+' g':I.t('Belirlenmedi')),
+ I.get()==='en'?'Do not invent new nutrition calculations. Assess recipes, variety, and practicality. Do not offer a medical diagnosis.':'Sayısal hesapları yeniden uydurma. Tarifleri, çeşitliliği ve pratikliği değerlendir. Tıbbi tanı verme.'
  ];
- d.forEach((v,i)=>lines.push(weekdays[i]+': '+week.days[i].map(m=>(idx.recipes[m.recipeId]?.name||'Bilinmeyen')+' x '+m.portions).join(', ')+' | '+Math.round(v.kcal)+' kcal; '+number(v.protein)+' g protein'));
- lines.push('Soru: Bu 7 günlük düzeni hazırlama kolaylığı, çeşitlilik, yeterlilik ve alışveriş israfı açısından değerlendir.');
+ d.forEach((v,i)=>lines.push(dayName(i)+': '+week.days[i].map(m=>(idx.recipes[m.recipeId]?recipeName(idx.recipes[m.recipeId]):I.t('Bilinmeyen'))+' x '+m.portions).join(', ')+' | '+Math.round(v.kcal)+' kcal; '+number(v.protein)+' g protein'));
+ lines.push(I.get()==='en'?'Question: Evaluate this seven day plan for ease of batch preparation, variety, nutritional adequacy, and grocery waste.':'Soru: Bu 7 günlük düzeni hazırlama kolaylığı, çeşitlilik, yeterlilik ve alışveriş israfı açısından değerlendir.');
  return lines.join('\n');
 }
 function render(){
  if(!week||!catalog)return;
- renderHeader();renderPlan();renderShopping();renderRecipes();renderProfile();
+ renderHeader();renderPlan();renderShopping();renderRecipes();renderProfile();I.translateStatic();
 }
 function switchTab(value){
  tab=value;
@@ -368,6 +368,8 @@ function forceUpdate(){
 }
 function bind(){
  $('forceUpdateBtn').onclick=forceUpdate;
+ $('langToggle').onclick=switchLanguage;
+ syncLanguageButton();
  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
  $('previous').onclick=()=>{offset--;customBatchCounts.clear();loadWeek();render()};
  $('next').onclick=()=>{offset++;customBatchCounts.clear();loadWeek();render()};
@@ -377,29 +379,29 @@ function bind(){
  $('kitchenToggleShopping').onclick=toggleKitchenMeasures;
  syncKitchenButtons();
  $('cloneDay').onclick=()=>{
-  if(!confirm('Seçili günün öğünleri diğer 6 güne kopyalansın mı?'))return;
+  if(!confirm(I.t('Seçili günün öğünleri diğer 6 güne kopyalansın mı?')))return;
   const current=E.clone(week.days[dayIndex]);week.days=week.days.map(()=>E.clone(current));saveWeek();render();
  };
  $('applyCount').onclick=()=>{
   const value=parseInt($('dailyMealCount').value,10);
   if(!Number.isInteger(value)||value<1||value>8)return;
-  if(!confirm('Bütün günlerdeki öğün sayısı '+value+' olsun mu? Fazla öğünler silinecek.'))return;
+  if(!confirm(I.t('Bütün günlerdeki öğün sayısı ')+value+I.t(' olsun mu? Fazla öğünler silinecek.')))return;
   for(const meals of week.days) {
     while(meals.length>value)meals.pop();
     while(meals.length<value)meals.push({id:'meal'+(meals.length+1),recipeId:'snack',portions:1});
   }
   saveWeek();render();
  };
- $('shopSearch').oninput=e=>{search=e.target.value.toLocaleLowerCase('tr');renderShopping()};
+ $('shopSearch').oninput=e=>{search=e.target.value.toLocaleLowerCase(I.get()==='en'?'en':'tr');renderShopping()};
  document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{
   filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderShopping();
  });
  $('copyShopping').onclick=()=>{
-  const goods=shopping().filter(g=>!stocks[g.id]&&!week.purchased[g.id]);const lines=['Alışveriş listesi · '+$('weekLabel').textContent];
-  for(const group of catalog.groups){const items=goods.filter(g=>g.ingredient.group===group.id);if(items.length){lines.push('',group.name);items.forEach(g=>lines.push('☐ '+g.ingredient.name+' · '+E.packageLabel(g)))}}
+  const goods=shopping().filter(g=>!stocks[g.id]&&!week.purchased[g.id]);const lines=[I.t('Alışveriş listesi · ')+$('weekLabel').textContent];
+  for(const group of catalog.groups){const items=goods.filter(g=>g.ingredient.group===group.id);if(items.length){lines.push('',I.group(group));items.forEach(g=>lines.push('☐ '+ingName(g.id)+' · '+pack(g)))}}
   copyText(lines.join('\n'),$('copyShopping'));
  };
- $('resetPurchased').onclick=()=>{if(confirm('Sadece bu haftanın satın alındı işaretleri temizlensin mi?')){week.purchased={};saveWeek(false);render()}};
+ $('resetPurchased').onclick=()=>{if(confirm(I.t('Sadece bu haftanın satın alındı işaretleri temizlensin mi?')) ){week.purchased={};saveWeek(false);render()}};
  ['goalCalories','referenceKg','proteinFactor','proteinManual'].forEach(id=>{
    $(id).addEventListener('change',()=>{
     const val=Number($(id).value);if(!Number.isFinite(val)||val<0)return;
@@ -416,14 +418,14 @@ function bind(){
 async function init(){
  try{
   const response=await fetch('./catalog.v2.json?ts='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);
-  const result=await response.json();if(!E.validate(result))throw new Error('Tarif verileri geçersiz');
+  const result=await response.json();if(!E.validate(result))throw new Error('Invalid recipe data');
   catalog=result;write(PRE+'catalogCache',result);showStatus('Güncel');
  }catch(e){
   catalog=read(PRE+'catalogCache',null);
-  if(!catalog||!E.validate(catalog)){$('loadError').textContent='Tarif dosyaları yüklenemedi. İnternet bağlantını kontrol edip yeniden dene.';return}
+  if(!catalog||!E.validate(catalog)){$('loadError').textContent=I.t('Tarif dosyaları yüklenemedi. İnternet bağlantını kontrol edip yeniden dene.');return}
   showStatus('Çevrimdışı kayıt');
  }
- idx=E.indexCatalog(catalog);migrate();loadWeek();const now=E.dateOnly();dayIndex=Math.round((Date.parse(now+'T12:00:00Z')-Date.parse(E.startOfWeek(now)+'T12:00:00Z'))/86400000);bind();render();$('mainContent').classList.remove('hidden');$('loadError').classList.add('hidden');
+ idx=E.indexCatalog(catalog);migrate();loadWeek();const now=E.dateOnly();dayIndex=Math.round((Date.parse(now+'T12:00:00Z')-Date.parse(E.startOfWeek(now)+'T12:00:00Z'))/86400000);bind();render();I.translateStatic();$('mainContent').classList.remove('hidden');$('loadError').classList.add('hidden');
 }
 init();
 })();
