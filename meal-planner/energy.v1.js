@@ -51,10 +51,11 @@ const dailyEnergy=(profile,sessions)=>{
 const dayBalance=(maintenance,planned,logged=null)=>{
  const hasLogged=logged!==''&&logged!==null&&logged!==undefined&&Number.isFinite(Number(logged))&&Number(logged)>=0;
  const calculated=Number(maintenance);
+ const hasPlanned=planned!==null&&planned!==undefined&&planned!==''&&Number.isFinite(Number(planned));
  return {
-   plannedIntake:Number.isFinite(Number(planned))?Number(planned):null,
+   plannedIntake:hasPlanned?Number(planned):null,
    loggedIntake:hasLogged?Number(logged):null,
-   plannedBalance:Number.isFinite(Number(planned))?calculated-Number(planned):null,
+   plannedBalance:hasPlanned?calculated-Number(planned):null,
    loggedBalance:hasLogged?calculated-Number(logged):null,
  };
 };
