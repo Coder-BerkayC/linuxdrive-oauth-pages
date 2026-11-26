@@ -33,6 +33,15 @@ GitHub Pages yayın kaynağı `main` ve `/(root)`. Bu alt klasör mevcut LinuxDr
 * `tests/batch.test.cjs`: Toplu hazırlık porsiyon, pirinç, tavuk ve diğer malzeme hesapları.
 * `plan.json`: Eski sabit liste sürüm 1 verisi, yeni hesaplama motoru bunu kullanmaz.
 
+## Turkish and English language switch
+
+* Üst bölümdeki `TR / EN` düğmesiyle arayüz dili anında değiştirilir.
+* Dil seçimi aynı tarayıcıda `mealplanner:v2:language` anahtarıyla saklanır. Mevcut öğün, fiyat, stok ve diğer kullanıcı kayıtları korunur.
+* Kapsam: sabit arayüz metinleri, haftanın günleri, tarif başlıkları ve adımları, malzeme ve kategori isimleri, paket açıklamaları, toplu hazırlık, mutfak ölçüleri, alışveriş listesinin kopyalanan metni, hedef ve güvenlik uyarıları.
+* `i18n.v3.js` içinde İngilizce çeviri sözlüğü tutulur. Tüm hesaplamalar orijinal tarif ve malzeme ID'leri üzerinden yapılır; dil değişince hesaplamaların matematiği değişmez.
+* Siteye özel API anahtarı, çeviri API hizmeti veya ücretli istek eklenmedi.
+* Yerel doğrulama: `tests/i18n.test.cjs`. iPhone Safari üzerindeki manuel kullanım kontrolü ayrıca gerekir.
+
 ## Mutfak ölçüsü dönüşümü
 
 * Tarifler ve alışveriş ekranındaki `Mutfak ölçüsü: Kapalı` düğmesiyle gram ve ml miktarlarının tahmini kaşık, bardak, adet karşılıkları açılır ve kapatılır.
