@@ -36,7 +36,7 @@ function syncLanguageButton(){
 function switchLanguage(){
  I.set(I.get()==='tr'?'en':'tr');write(PRE+'language',I.get());
  syncLanguageButton();syncKitchenButtons();showStatus(lastStatus);
- render();I.translateStatic();
+ render();I.translateStatic();globalThis.EnergyBalance?.refresh?.();
 }
 const openBatchRecipes=new Set();
 const customBatchCounts=new Map();
@@ -357,12 +357,13 @@ function summaryForAI(){
 }
 function render(){
  if(!week||!catalog)return;
- renderHeader();renderPlan();renderShopping();renderRecipes();renderProfile();I.translateStatic();
+ renderHeader();renderPlan();renderShopping();renderRecipes();renderProfile();I.translateStatic();globalThis.EnergyBalance?.refresh?.();
 }
 function switchTab(value){
  tab=value;
  document.querySelectorAll('[data-tab]').forEach(b=>{let a=b.dataset.tab===value;b.classList.toggle('active',a);b.setAttribute('aria-selected',String(a))});
- ['plan','shopping','recipes','goals'].forEach(p=>$(p+'Pane').classList.toggle('hidden',p!==value));
+ ['plan','shopping','recipes','energy','goals'].forEach(p=>$(p+'Pane').classList.toggle('hidden',p!==value));
+ if(value==='energy')globalThis.EnergyBalance?.refresh?.();
 }
 function forceUpdate(){
  const url = new URL(window.location.href);
@@ -430,5 +431,6 @@ async function init(){
  }
  idx=E.indexCatalog(catalog);migrate();loadWeek();const now=E.dateOnly();dayIndex=Math.round((Date.parse(now+'T12:00:00Z')-Date.parse(E.startOfWeek(now)+'T12:00:00Z'))/86400000);bind();render();I.translateStatic();$('mainContent').classList.remove('hidden');$('loadError').classList.add('hidden');
 }
+globalThis.MealPlannerBridge={getWeek:()=>week,getMonday:()=>monday(),getCatalog:()=>catalog,getLanguage:()=>I.get()};
 init();
 })();
