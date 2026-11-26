@@ -10,7 +10,9 @@ const T=(tr,eng)=>en()?eng:tr;
 const fmt=n=>new Intl.NumberFormat(en()?'en-US':'tr-TR',{maximumFractionDigits:0}).format(n);
 const read=(key,fallback)=>{try{const value=localStorage.getItem(key);return value===null?fallback:JSON.parse(value)}catch{return fallback}};
 const save=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch{}};
-let state=read(KEY,{age:'',height:'',weight:'',coefficient:'',activity:'sedentary',deficit:300,sessions:[]});
+const defaults={age:'',height:'',weight:'',coefficient:'',activity:'sedentary',deficit:300,sessions:[]};
+let state=read(KEY,defaults);
+if(!state||typeof state!=='object'||Array.isArray(state))state={...defaults};
 if(!Array.isArray(state.sessions))state.sessions=[];
 if(!M.BASE.some(x=>x.id===state.activity))state.activity='sedentary';
 const weekdays={tr:['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'],en:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']};
@@ -109,7 +111,8 @@ function refresh(){
  const plannedGap=plan?M.average(daily.map((x,i)=>x.maintenance-plan[i])):null;
  $('energyPlanGap').textContent=plannedGap===null?'—':deficitText(plannedGap);
  const chosenDeficit=Math.max(0,Math.min(1000,Number(state.deficit)||0));
- $('energyTargetCalories').textContent=fmt(Math.round(maintenanceAvg-chosenDeficit))+' '+T('kcal/gün','kcal/day');
+ const proposed=maintenanceAvg-chosenDeficit;
+ $('energyTargetCalories').textContent=proposed<1200?T('Çok düşük hedef, uzmanla değerlendir','Very low target, seek professional guidance'):fmt(Math.round(proposed))+' '+T('kcal/gün','kcal/day');
  const rows=$('energyDayRows');rows.replaceChildren();
  let loggedDays=0,loggedTotal=0;
  for(let i=0;i<7;i++){
