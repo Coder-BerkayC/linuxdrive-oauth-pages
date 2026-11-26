@@ -42,6 +42,29 @@ GitHub Pages yayın kaynağı `main` ve `/(root)`. Bu alt klasör mevcut LinuxDr
 * Siteye özel API anahtarı, çeviri API hizmeti veya ücretli istek eklenmedi.
 * Yerel doğrulama: `tests/i18n.test.cjs`. iPhone Safari üzerindeki manuel kullanım kontrolü ayrıca gerekir.
 
+## Kalori dengesi ve egzersiz sekmesi
+
+`Kalori Dengesi / Energy Balance` yeni beşinci sekmedir.
+
+* Yaş, boy (cm), kilo (kg), Mifflin St Jeor denklem katsayısı ve antrenman **hariç** günlük hareket seviyesi girilir.
+* `Mifflin St Jeor` dinlenme enerji harcaması: `10 × kilo + 6.25 × boy − 5 × yaş + 5` (erkek referans denklemi) veya `−161` (kadın referans denklemi). Denklemin her bireye uygun olmadığı kullanıcıya söylenir.
+* Günlük hareket katsayıları 1.2, 1.35, 1.5 ve 1.7 olarak belirlenen yaklaşık aktivite varsayımlarıdır. Bu, antrenman hariç gün içi hareketi kapsar.
+* Egzersiz türü, seans dakikası ve haftanın seçili günleri girilir. 2024 Physical Activity Compendium MET benzeri temsilî değerleri kullanılır. Ek egzersiz enerjisi kabaca `(MET − 1) × kilo × dakika / 60`; 1 MET dinlenme harcamasını tekrar saymamak için çıkarılır. Tahminler kişiye göre ciddi değişkenlik gösterebilir.
+* Günlük **tahmini koruma kalorisi**: `dinlenme enerjisi × günlük hareket katsayısı + o günün net egzersiz kalorisi`.
+* Günlük öğün planından gelen kalorilerle koruma tahmini karşılaştırılır. Pozitif fark **tahmini açık**, negatif fark **tahmini fazla** demektir.
+* İsteyen kullanıcı gerçekten yediği toplam kaloriyi ayrı kaydeder. Bu kaydın kullanıldığı sonuç `kayıt / logged` olarak etiketlenir. Giriş yoksa gösterilen fark yalnızca `plan` olarak etiketlenir.
+* Haftalık kalori günlüğü haftanın her takvim gününe göre cihazda saklanır. Tarihi takip etmek için `Europe/Istanbul` hafta başlangıcı kullanılır.
+* Kullanıcı örnek bir günlük hedef açık girebilir, ancak bu klinik ya da kişiye özel reçete değildir. **Gerçek veya ölçülmüş bir açık olarak sunulmaz.**
+* Boy, kilo, yaş, katsayı, egzersiz ve tüketim kayıtları GitHub'a yüklenmez. Safari `localStorage` kullanılır; başka cihazla senkronize olmaz.
+* Sayısal motor `energy.v1.js`, bağımsız arayüz `energy-ui.v1.js`, test `tests/energy.test.cjs`.
+* Metotlar sadece yetişkinlerde genel tahmin için kullanılır. Beslenme tedavisi, gebelik, hastalık veya özel ihtiyaçlar sağlık uzmanıyla değerlendirilir.
+
+Kaynaklar:
+
+* Mifflin et al., *A new predictive equation for resting energy expenditure in healthy individuals* (1990): https://pubmed.ncbi.nlm.nih.gov/2305711/
+* 2024 Adult Compendium of Physical Activities: https://pacompendium.com/adult-compendium/
+* 2024 Compendium yöntem makalesi: https://pmc.ncbi.nlm.nih.gov/articles/PMC10818145/
+
 ## Mutfak ölçüsü dönüşümü
 
 * Tarifler ve alışveriş ekranındaki `Mutfak ölçüsü: Kapalı` düğmesiyle gram ve ml miktarlarının tahmini kaşık, bardak, adet karşılıkları açılır ve kapatılır.
