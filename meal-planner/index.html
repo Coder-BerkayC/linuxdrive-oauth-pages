@@ -4,15 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f5f6f1">
-<meta name="app-version" content="3.0.0">
+<meta name="app-version" content="3.1.0">
 <meta name="robots" content="noindex,nofollow">
 <meta name="description" content="Yedi günlük yemek planı, tarifler, makro besin hesaplama ve alışveriş listesi.">
 <title>Haftalık Marketim | Beslenme Planlayıcısı</title>
-<link rel="stylesheet" href="./styles.v2.css?v=3.0">
+<link rel="stylesheet" href="./styles.v2.css?v=3.1">
 <script defer src="./engine.v2.js?v=2.3"></script>
 <script defer src="./kitchen.v2.js?v=2.1"></script>
 <script defer src="./i18n.v3.js?v=3.0"></script>
-<script defer src="./app.v2.js?v=3.0"></script>
+<script defer src="./energy.v1.js?v=3.1"></script>
+<script defer src="./app.v2.js?v=3.1"></script>
+<script defer src="./energy-ui.v1.js?v=3.1"></script>
 </head>
 <body>
 <main>
@@ -44,6 +46,7 @@
       <button data-tab="plan" class="active" role="tab" aria-selected="true">7 Gün</button>
       <button data-tab="shopping" role="tab" aria-selected="false">Alışveriş</button>
       <button data-tab="recipes" role="tab" aria-selected="false">Tarifler</button>
+      <button data-tab="energy" role="tab" aria-selected="false">Kalori Dengesi</button>
       <button data-tab="goals" role="tab" aria-selected="false">Hedefler</button>
     </nav>
     <section id="planPane">
@@ -119,6 +122,70 @@
         <p id="recipeMeasuresNote" class="measure-note hidden">1 çay kaşığı 5 ml, 1 tatlı kaşığı 10 ml, 1 yemek kaşığı 15 ml, 1 su bardağı 200 ml kabul edilir. Karşılıklar yaklaşık değerlerdir. Çiğ tavuk gibi hassas porsiyonları tartıyla ölç.</p>
       </div>
       <div id="recipeList"></div>
+    </section>
+
+    <section id="energyPane" class="hidden">
+      <div class="panel">
+        <div class="panelheader"><h2 data-energy-en="Energy balance">Kalori dengesi</h2><span class="pill" data-energy-en="Estimate">Tahmini</span></div>
+        <p class="muted small" data-energy-en="Enter your body measurements and daily routine. The calculator estimates your resting energy needs, daily maintenance calories and the balance against your seven day meal plan.">Vücut ölçülerini ve günlük hareket düzenini gir. Hesaplayıcı dinlenme enerjini, tahmini günlük koruma kalorilerini ve yedi günlük öğün planınla farkını hesaplar.</p>
+        <div class="energy-fields">
+          <label><span data-energy-en="Age (years)">Yaş</span><input id="energyAge" type="number" min="18" max="100" step="1" inputmode="numeric" placeholder="28" /></label>
+          <label><span data-energy-en="Height (cm)">Boy (cm)</span><input id="energyHeight" type="number" min="100" max="250" step="1" inputmode="decimal" placeholder="185" /></label>
+          <label><span data-energy-en="Weight (kg)">Kilo (kg)</span><input id="energyWeight" type="number" min="30" max="350" step="0.1" inputmode="decimal" placeholder="80" /></label>
+          <label><span data-energy-en="Equation coefficient">Denklem katsayısı</span>
+            <select id="energyCoefficient">
+              <option value="" data-energy-en="Select">Seç</option>
+              <option value="male" data-energy-en="Male equation">Erkek denklemi</option>
+              <option value="female" data-energy-en="Female equation">Kadın denklemi</option>
+            </select>
+          </label>
+          <label class="energy-wide"><span data-energy-en="Daily activity (excluding workouts)">Günlük hareket (antrenman hariç)</span>
+            <select id="energyActivity">
+              <option value="sedentary" data-energy-en="Mostly seated">Genelde oturarak</option>
+              <option value="light" data-energy-en="Light daily movement">Günlük hafif hareketli</option>
+              <option value="moderate" data-energy-en="Active throughout the day">Gün boyu hareketli</option>
+              <option value="high" data-energy-en="Physically demanding day">Fiziksel olarak yoğun gün</option>
+            </select>
+          </label>
+        </div>
+        <p class="small muted" data-energy-en="Mifflin St Jeor provides two biological sex coefficients. Choose the equation you want to use. The estimate is less reliable if the reference equations do not match your physiology. Exercise is added separately to prevent double counting.">Mifflin St Jeor denklemi iki biyolojik cinsiyet katsayısı kullanır. Kullanmak istediğin denklemi seç. Bu denklemler fizyolojine uygun değilse tahminin güvenilirliği düşebilir. Antrenmanlar iki kez sayılmasın diye ayrıca eklenir.</p>
+      </div>
+      <div class="panel">
+        <div class="panelheader"><h2 data-energy-en="Weekly exercise plan">Haftalık egzersiz planı</h2><button id="energyAddSession" class="btn main" type="button" data-energy-en="+ Add workout">+ Antrenman ekle</button></div>
+        <p class="small muted" data-energy-en="Choose the activity, duration and exact weekdays. The same workout can repeat on several days. Calculated calories are approximate MET based estimates.">Egzersiz türünü, süresini ve hangi günler yaptığını seç. Bir antrenmanı birden fazla güne koyabilirsin. Yakılan kaloriler yaklaşık MET tahminidir.</p>
+        <div id="energySessions"></div>
+        <p class="small muted" id="energySessionHint"></p>
+      </div>
+      <div class="panel">
+        <h2 data-energy-en="Your estimated energy needs">Tahmini enerji ihtiyacın</h2>
+        <p id="energyIncomplete" class="note" data-energy-en="Enter age, height, weight and an equation coefficient to see an estimate.">Hesaplama için yaş, boy, kilo ve denklem katsayısını doldur.</p>
+        <div id="energyResults" class="hidden">
+          <div class="energy-metrics">
+            <div class="metric"><b id="energyRest">0</b><span data-energy-en="Resting energy kcal/day">Dinlenme enerjisi kcal/gün</span></div>
+            <div class="metric"><b id="energyMaintenance">0</b><span data-energy-en="Avg. maintenance kcal/day">Ortalama koruma kcal/gün</span></div>
+            <div class="metric"><b id="energyWorkout">0</b><span data-energy-en="Avg. net workout kcal/day">Ortalama net egzersiz kcal/gün</span></div>
+            <div class="metric"><b id="energyPlanGap">0</b><span data-energy-en="Avg. planned balance kcal/day">Planlanan ort. fark kcal/gün</span></div>
+          </div>
+          <div class="energy-target-row">
+            <label><span data-energy-en="Desired daily deficit (kcal)">İstenilen günlük kalori açığı</span>
+              <input id="energyDeficit" type="number" min="0" max="1000" step="50" inputmode="numeric" placeholder="300">
+            </label>
+            <div><b id="energyTargetCalories"></b><p class="small muted" data-energy-en="Average target intake from your chosen deficit. This is a calculation, not a diet prescription.">Seçtiğin açığa göre ortalama tüketim hedefi. Bu hesap bir diyet reçetesi değildir.</p></div>
+          </div>
+          <h3 data-energy-en="Daily comparison">Günlük karşılaştırma</h3>
+          <p class="small muted" data-energy-en="Planned intake comes from your selected recipes. Enter actual total calories only if you tracked everything you ate and drank. Without actual entries, only a planned balance is shown.">Plan kalorileri seçtiğin tariflerden gelir. Gerçekte tükettiğin toplam kaloriyi yalnızca tüm yiyecek ve içecekleri takip ettiysen gir. Gerçek tüketim girilmediyse sadece planlanan fark gösterilir.</p>
+          <div class="energy-table-wrap">
+            <table class="seven energy-table">
+              <thead><tr><th data-energy-en="Day">Gün</th><th data-energy-en="Maintenance">Koruma</th><th data-energy-en="Plan kcal">Plan kcal</th><th data-energy-en="Actual kcal">Gerçek kcal</th><th data-energy-en="Estimated balance">Tahmini fark</th></tr></thead>
+              <tbody id="energyDayRows"></tbody>
+            </table>
+          </div>
+          <p id="energyLoggedSummary" class="small muted"></p>
+        </div>
+        <div class="note"><b data-energy-en="What does the balance mean?">Kalori farkı ne anlama geliyor?</b><span data-energy-en="A positive balance here means an estimated deficit. A negative value means an estimated surplus. Body weight changes, portion errors, activity variation and metabolic adaptation make these estimates uncertain. Even with logged intake this is not a measured calorie deficit.">Burada pozitif fark tahmini açığı, negatif fark tahmini fazlayı gösterir. Kilo değişimi, porsiyon hataları, antrenman yoğunluğu ve metabolik uyum nedeniyle tahmin kesin değildir. Gerçek tüketim girildiğinde bile bu ölçülmüş bir kalori açığı değildir.</span></div>
+        <p class="small muted" data-energy-en="Your measurements and food logs are stored only in this browser, not in the public GitHub repository. This calculator is for adults. Pregnancy, eating disorders, illness or unusual training demands require professional guidance.">Boy, kilo ve tüketim kayıtların yalnızca bu tarayıcıda saklanır. Herkese açık GitHub reposuna gönderilmez. Hesaplayıcı yetişkinler içindir. Gebelik, yeme bozukluğu, hastalık veya olağandışı antrenman yükü söz konusuysa profesyonel değerlendirme gerekir.</p>
+        <p class="small muted"><a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener noreferrer">Mifflin St Jeor (1990)</a> · <a href="https://pacompendium.com/adult-compendium/" target="_blank" rel="noopener noreferrer">2024 Compendium of Physical Activities</a></p>
+      </div>
     </section>
     <section id="goalsPane" class="hidden">
       <div class="panel">
