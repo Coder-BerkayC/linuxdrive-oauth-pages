@@ -164,6 +164,9 @@ const en={
     "Farklı malzeme": "Different ingredients",
     "7 Gün": "7 Days",
     "Kalori Dengesi": "Energy Balance",
+    "Beslenme": "Nutrition",
+    "Spor": "Fitness",
+    "Antrenman": "Training",
     "Alışveriş": "Shopping",
     "Tarifler": "Recipes",
     "Hedefler": "Goals",
@@ -385,7 +388,7 @@ const translateStatic=()=>{
  const nodes=[];
  while(walker.nextNode())nodes.push(walker.currentNode);
  for(const node of nodes){
-  const parent=node.parentElement;if(!parent||['SCRIPT','STYLE'].includes(parent.tagName))continue;
+  const parent=node.parentElement;if(!parent||['SCRIPT','STYLE'].includes(parent.tagName)||parent.closest('[data-sport-ui]'))continue;
   const original=staticOriginal.has(node)?staticOriginal.get(node):node.nodeValue;
   if(!staticOriginal.has(node))staticOriginal.set(node,original);
   const trimmed=original.trim();
@@ -393,6 +396,7 @@ const translateStatic=()=>{
   node.nodeValue=language==='en'?original.replace(trimmed,en.static[trimmed]):original;
  }
  for(const el of document.querySelectorAll('[placeholder],[title],[aria-label]')){
+  if(el.closest('[data-sport-ui]'))continue;
   let attrs=attrOriginal.get(el);
   if(!attrs){attrs={};for(const key of ['placeholder','title','aria-label'])if(el.hasAttribute(key))attrs[key]=el.getAttribute(key);attrOriginal.set(el,attrs);}
   for(const [key,value] of Object.entries(attrs))if(en.static[value])el.setAttribute(key,language==='en'?en.static[value]:value);

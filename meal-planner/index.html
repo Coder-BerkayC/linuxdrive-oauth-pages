@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f5f6f1">
-<meta name="app-version" content="3.1.0">
+<meta name="app-version" content="4.0.0">
 <meta name="robots" content="noindex,nofollow">
 <meta name="description" content="Yedi günlük yemek planı, tarifler, makro besin hesaplama ve alışveriş listesi.">
 <title>Haftalık Marketim | Beslenme Planlayıcısı</title>
-<link rel="stylesheet" href="./styles.v2.css?v=3.1">
+<link rel="stylesheet" href="./styles.v2.css?v=4.0">
 <script defer src="./engine.v2.js?v=2.3"></script>
 <script defer src="./kitchen.v2.js?v=2.1"></script>
-<script defer src="./i18n.v3.js?v=3.0"></script>
-<script defer src="./energy.v1.js?v=3.1"></script>
-<script defer src="./app.v2.js?v=3.1"></script>
-<script defer src="./energy-ui.v1.js?v=3.1"></script>
+<script defer src="./i18n.v3.js?v=4.0"></script>
+<script defer src="./energy.v2.js?v=4.0"></script>
+<script defer src="./app.v2.js?v=4.0"></script>
+<script defer src="./energy-ui.v2.js?v=4.0"></script>
 </head>
 <body>
 <main>
@@ -42,13 +42,14 @@
       <div class="metric"><b id="avgProtein">0 g</b><span>Günlük ort. protein</span></div>
       <div class="metric"><b id="ingredientCount">0</b><span>Farklı malzeme</span></div>
     </div>
-    <nav class="tabs" role="tablist" aria-label="Uygulama bölümleri">
+    <nav class="major-tabs"><button type="button" data-area="food" class="active" aria-pressed="true">Beslenme</button><button type="button" data-area="sport" aria-pressed="false">Spor</button></nav>
+    <nav class="tabs food-tabs" role="tablist">
       <button data-tab="plan" class="active" role="tab" aria-selected="true">7 Gün</button>
       <button data-tab="shopping" role="tab" aria-selected="false">Alışveriş</button>
       <button data-tab="recipes" role="tab" aria-selected="false">Tarifler</button>
-      <button data-tab="energy" role="tab" aria-selected="false">Kalori Dengesi</button>
       <button data-tab="goals" role="tab" aria-selected="false">Hedefler</button>
     </nav>
+    <nav class="tabs sport-tabs hidden" role="tablist"><button data-tab="training" role="tab" aria-selected="false">Antrenman</button><button data-tab="energy" role="tab" aria-selected="false">Kalori Dengesi</button></nav>
     <section id="planPane">
       <div class="panel">
         <div class="panelheader"><h2>Haftalık plan</h2><span class="pill">Pazartesi ile Pazar</span></div>
@@ -124,7 +125,10 @@
       <div id="recipeList"></div>
     </section>
 
-    <section id="energyPane" class="hidden">
+    <section id="trainingPane" class="hidden" data-sport-ui>
+      <div class="panel"><h2 id="trainingTitle">Antrenman programı</h2><p class="muted small" id="trainingIntro"></p><div id="trainingCards"></div></div>
+    </section>
+    <section id="energyPane" class="hidden" data-sport-ui>
       <div class="panel">
         <div class="panelheader"><h2 data-energy-en="Energy balance">Kalori dengesi</h2><span class="pill" data-energy-en="Estimate">Tahmini</span></div>
         <p class="muted small" data-energy-en="Enter your body measurements and daily routine. The calculator estimates your resting energy needs, daily maintenance calories and the balance against your seven day meal plan.">Vücut ölçülerini ve günlük hareket düzenini gir. Hesaplayıcı dinlenme enerjini, tahmini günlük koruma kalorilerini ve yedi günlük öğün planınla farkını hesaplar.</p>
@@ -154,7 +158,7 @@
         <div class="panelheader"><h2 data-energy-en="Weekly exercise plan">Haftalık egzersiz planı</h2><button id="energyAddSession" class="btn main" type="button" data-energy-en="+ Add workout">+ Antrenman ekle</button></div>
         <p class="small muted" data-energy-en="Choose the activity, duration and exact weekdays. The same workout can repeat on several days. Calculated calories are approximate MET based estimates.">Egzersiz türünü, süresini ve hangi günler yaptığını seç. Bir antrenmanı birden fazla güne koyabilirsin. Yakılan kaloriler yaklaşık MET tahminidir.</p>
         <div id="energySessions"></div>
-        <p class="small muted" id="energySessionHint"></p>
+        <p class="small muted" id="energySessionHint"></p><p class="note hidden" id="energyUncertain"></p>
       </div>
       <div class="panel">
         <h2 data-energy-en="Your estimated energy needs">Tahmini enerji ihtiyacın</h2>
@@ -184,6 +188,7 @@
         </div>
         <div class="note"><b data-energy-en="What does the balance mean?">Kalori farkı ne anlama geliyor?</b><span data-energy-en="A positive balance here means an estimated deficit. A negative value means an estimated surplus. Body weight changes, portion errors, activity variation and metabolic adaptation make these estimates uncertain. Even with logged intake this is not a measured calorie deficit.">Burada pozitif fark tahmini açığı, negatif fark tahmini fazlayı gösterir. Kilo değişimi, porsiyon hataları, antrenman yoğunluğu ve metabolik uyum nedeniyle tahmin kesin değildir. Gerçek tüketim girildiğinde bile bu ölçülmüş bir kalori açığı değildir.</span></div>
         <p class="small muted" data-energy-en="Your measurements and food logs are stored only in this browser, not in the public GitHub repository. This calculator is for adults. Pregnancy, eating disorders, illness or unusual training demands require professional guidance.">Boy, kilo ve tüketim kayıtların yalnızca bu tarayıcıda saklanır. Herkese açık GitHub reposuna gönderilmez. Hesaplayıcı yetişkinler içindir. Gebelik, yeme bozukluğu, hastalık veya olağandışı antrenman yükü söz konusuysa profesyonel değerlendirme gerekir.</p>
+        <div class="note"><b data-energy-en="Hybrid expenditure model">Hibrit enerji harcaması modeli</b><p data-energy-en="Treadmill uses ACSM speed, grade and gait equations; other exercise uses activity-specific 2024 Compendium METs. Incremental expenditure replaces the baseline energy assigned to the same minutes. Resistance and elliptical values remain approximate. Treadmill estimates assume steady exercise without body-weight support on rails.">Koşu bandında ACSM hız, eğim ve hareket biçimi denklemleri; diğer egzersizlerde 2024 Compendium aktiviteye özel MET değerleri kullanılır. Aynı dakikaların normal enerji harcaması çıkarılarak ek harcama hesaplanır. Ağırlık ve eliptik değerleri yaklaşıktır. Koşu bandı hesabı sabit tempo ve tutunarak vücut ağırlığını desteklememe varsayımına dayanır.</p><p data-energy-en="Workout expenditure is based on your plan, not measured exercise. Logged food does not make it a measured deficit. Do not train to chase a calorie number.">Egzersiz harcaması plan üzerinden tahmin edilir, ölçüm değildir. Gerçek tüketim girmek açığı ölçüme dönüştürmez. Kalori sayısını yakalamak için antrenmanı zorlaştırma.</p><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7896743/" target="_blank" rel="noopener noreferrer">ACSM walking</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12419060/" target="_blank" rel="noopener noreferrer">ACSM running</a> · <a href="https://pacompendium.com/conditioning-exercise/" target="_blank" rel="noopener noreferrer">2024 Compendium</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/38896201/" target="_blank" rel="noopener noreferrer">Resistance exercise review</a></div>
         <p class="small muted"><a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener noreferrer">Mifflin St Jeor (1990)</a> · <a href="https://pacompendium.com/adult-compendium/" target="_blank" rel="noopener noreferrer">2024 Compendium of Physical Activities</a></p>
       </div>
     </section>

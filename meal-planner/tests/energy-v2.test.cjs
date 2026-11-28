@@ -1,0 +1,12 @@
+'use strict';
+const {test}=require('node:test');const assert=require('node:assert/strict');
+require('../energy.v2.js');const M=globalThis.EnergyMath;
+const p={age:30,height:180,weight:80,coefficient:'male',activity:'sedentary'};
+const close=(a,b)=>Math.abs(a-b)<1e-8;
+test('ACSM walking equation',()=>assert.ok(close(M.treadmillVO2(6,10,'walk'),31.5)));
+test('ACSM running equation',()=>assert.ok(close(M.treadmillVO2(7.75,12,'run'),3.5+7.75*1000/60*(0.2+0.9*0.12))));
+test('baseline energy replaced during exercise',()=>{const d=M.dailyEnergy(p,[{type:'treadmill',minutes:20,speed:7.75,grade:12,gait:'run',days:[0]}]);assert.ok(close(d[0].exercise,M.treadmillVO2(7.75,12,'run')*80/1000*5*20-2136/1440*20));assert.equal(d[1].maintenance,2136);assert.equal(d[0].outOfRange,true)});
+test('missing gait withholds maintenance',()=>assert.equal(M.dailyEnergy(p,[{type:'treadmill',minutes:20,speed:7.75,grade:12,gait:'',days:[0]}])[0].maintenance,null));
+test('unassigned exercise excluded',()=>assert.equal(M.dailyEnergy(p,[{type:'supersets',minutes:60,days:[]}])[0].maintenance,2136));
+test('compendium values',()=>{assert.equal(M.ACTIVITY.supersets.met,5.8);assert.equal(M.ACTIVITY.elliptical.met,5);assert.equal(M.ACTIVITY.ellipticalHigh.met,9)});
+test('unknown values stay unknown',()=>{assert.equal(M.dayBalance(null,2100,2000).loggedBalance,null);assert.equal(M.dayBalance(2500,null,null).plannedBalance,null)});

@@ -99,3 +99,12 @@ Genel makrolar tahmindir; marka etiketleri ve gramajlar doğrulanmalıdır. Prot
 GitHub dosyaları güncellendiğinde Pages yeni sürümü yayınlar. Safari önbelleği bazı güncellemeleri geciktirebilir. İleri seviye teknik değerlendirme ve gelecekteki FreeLLMAPI bağlantısı için `DEVELOPMENT_PLAN.md` dosyasına bak.
 
 Otomatik testler: `node --test meal-planner/tests/engine.test.cjs`. Testler sunucusuz hesaplama motorunu kapsar; iPhone Safari üzerinde gerçek cihaz doğrulaması ayrıca yapılmalıdır.
+
+
+## Version 4.0: Nutrition and Fitness
+
+Two primary areas with shared week and meal plan. Fitness has Training and Energy Balance. Generic training templates and personal notes are separated: no name or personal measurements are embedded, notes and choices are local. A/back and shoulders, B/legs, C/chest and arms, treadmill, elliptical and core are optional templates. Unspecified durations, days and intensity require input. Avoid duplicating pre-existing sessions.
+
+Energy v2 keeps Mifflin St Jeor resting expenditure and approximate nonexercise baseline. ACSM treadmill VO2 in mL/kg/min: walking = 3.5 + 0.1v + 1.8vg; running = 3.5 + 0.2v + 0.9vg, v in m/min and g fractional grade. Preferred walking speed 50–100 m/min and running generally above 134 m/min; outside ranges, flag uncertainty. Other activities use 2024 Compendium: reciprocal circuit supersets 5.8 MET, elliptical moderate 5 or vigorous 9, light core 2.8 or moderate calisthenics 3.8. These are population proxies. Gross session kcal = VO2 × kg / 1000 × 5 × minutes; incremental kcal = gross minus estimated baseline energy allocated to the session minutes. Missing scheduled session parameters withhold daily maintenance, unassigned sessions are excluded. No unvalidated EPOC correction. No precise individual expenditure claim.
+
+Sources: https://pmc.ncbi.nlm.nih.gov/articles/PMC7896743/ ; https://pmc.ncbi.nlm.nih.gov/articles/PMC12419060/ ; https://pacompendium.com/conditioning-exercise/ ; https://pubmed.ncbi.nlm.nih.gov/38896201/ .

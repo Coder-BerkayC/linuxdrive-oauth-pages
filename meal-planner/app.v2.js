@@ -359,12 +359,19 @@ function render(){
  if(!week||!catalog)return;
  renderHeader();renderPlan();renderShopping();renderRecipes();renderProfile();I.translateStatic();globalThis.EnergyBalance?.refresh?.();
 }
+let lastFoodTab='plan',lastSportTab='training';
 function switchTab(value){
- tab=value;
- document.querySelectorAll('[data-tab]').forEach(b=>{let a=b.dataset.tab===value;b.classList.toggle('active',a);b.setAttribute('aria-selected',String(a))});
- ['plan','shopping','recipes','energy','goals'].forEach(p=>$(p+'Pane').classList.toggle('hidden',p!==value));
- if(value==='energy')globalThis.EnergyBalance?.refresh?.();
+ tab=value;const sport=['training','energy'].includes(value);
+ if(sport)lastSportTab=value;else lastFoodTab=value;
+ document.querySelectorAll('[data-tab]').forEach(b=>{const a=b.dataset.tab===value;b.classList.toggle('active',a);b.setAttribute('aria-selected',String(a))});
+ document.querySelectorAll('[data-area]').forEach(b=>{const a=b.dataset.area===(sport?'sport':'food');b.classList.toggle('active',a);b.setAttribute('aria-pressed',String(a))});
+ document.querySelector('.food-tabs').classList.toggle('hidden',sport);
+ document.querySelector('.sport-tabs').classList.toggle('hidden',!sport);
+ ['plan','shopping','recipes','training','energy','goals'].forEach(p=>$(p+'Pane').classList.toggle('hidden',p!==value));
+ document.querySelector('#mainContent > .summary').classList.toggle('hidden',sport);
+ if(sport)globalThis.EnergyBalance?.refresh?.();
 }
+
 function forceUpdate(){
  const url = new URL(window.location.href);
  url.searchParams.set('fresh',String(Date.now()));
@@ -375,6 +382,7 @@ function bind(){
  $('langToggle').onclick=switchLanguage;
  syncLanguageButton();
  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+ document.querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>switchTab(b.dataset.area==='sport'?lastSportTab:lastFoodTab));
  $('previous').onclick=()=>{offset--;customBatchCounts.clear();loadWeek();render()};
  $('next').onclick=()=>{offset++;customBatchCounts.clear();loadWeek();render()};
  $('now').onclick=()=>{offset=0;dayIndex=0;customBatchCounts.clear();loadWeek();render()};

@@ -90,3 +90,12 @@ select,input[type="number"],input[type="search"]{border:1px solid #d4ddd3;backgr
  .energy-target-row{grid-template-columns:1fr}
 }
 @media(max-width:380px){.tabs button{font-size:10px;padding:9px 0}}
+
+.major-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:16px 0 8px}
+.major-tabs button{border:1px solid var(--line);border-radius:15px;padding:17px 8px;background:white;color:var(--green);font-size:19px;font-weight:800;cursor:pointer}
+.major-tabs button.active{background:var(--green);color:white;border-color:var(--green)}
+.food-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
+.sport-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+.training-note-label{display:block;font-size:12px;color:var(--sub);margin:10px 0}
+.training-note-label textarea{display:block;width:100%;margin-top:5px;padding:9px;border:1px solid var(--line);border-radius:9px;background:white;font:inherit;color:var(--ink);resize:vertical}
+#trainingCards ul{padding-left:22px;margin:8px 0}#trainingCards li{margin:4px 0}
